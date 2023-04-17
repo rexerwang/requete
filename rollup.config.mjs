@@ -1,0 +1,81 @@
+import path from 'node:path'
+
+import babel from '@rollup/plugin-babel'
+import resolve from '@rollup/plugin-node-resolve'
+import terser from '@rollup/plugin-terser'
+import typescript from '@rollup/plugin-typescript'
+import dts from 'rollup-plugin-dts'
+
+import { copy, generatePackageJson, getBanner } from './build/index.mjs'
+import pkg from './package.json' assert { type: 'json' }
+
+const banner = getBanner(pkg)
+
+const dist = (file = '') => path.join('dist', file)
+
+const useBabel = () =>
+  babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] })
+
+const withMinify = (config, sourcemap = true) => {
+  const min = (file) => {
+    const ext = path.extname(file)
+    return file.slice(0, -ext.length) + '.min' + ext
+  }
+
+  const { plugins, output } = config
+
+  plugins.push(resolve(), useBabel())
+  output.sourcemap = sourcemap
+
+  return [
+    config,
+    {
+      ...config,
+      plugins: [...plugins, terser()],
+      output: { ...output, file: min(output.file) },
+    },
+  ]
+}
+
+export default [
+  ...withMinify({
+    input: 'src/index.ts',
+    output: {
+      name: 'Requete',
+      file: dist(pkg.browser),
+      format: 'umd',
+      banner,
+    },
+    plugins: [typescript()],
+  }),
+  {
+    input: 'src/index.ts',
+    external: ['query-string'],
+    output: [
+      { file: dist(pkg.main), format: 'cjs', banner },
+      { file: dist(pkg.module), format: 'es', banner },
+    ],
+    plugins: [typescript()],
+  },
+  {
+    input: './temp/src/index.d.ts',
+    output: { file: dist(pkg.types), format: 'es', banner },
+    plugins: [
+      dts(),
+      generatePackageJson({ src: pkg, dest: dist() }),
+      copy([
+        { src: 'LICENSE', dest: dist() },
+        { src: 'README.md', dest: dist() },
+      ]),
+    ],
+  },
+  ...withMinify({
+    input: 'src/polyfill.mjs',
+    output: {
+      file: dist(pkg.exports['./polyfill']),
+      format: 'umd',
+      banner,
+    },
+    plugins: [],
+  }),
+]

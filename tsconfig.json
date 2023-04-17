@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2017",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "ESNext"],
+    "lib": ["ESNext", "DOM"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,

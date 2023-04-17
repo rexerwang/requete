@@ -1,3 +1,4 @@
+import { babel } from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
@@ -14,7 +15,13 @@ export default [
       file: pkg.browser,
       format: 'umd',
     },
-    plugins: [resolve(), commonjs(), typescript(), terser()],
+    plugins: [
+      typescript(),
+      resolve(),
+      commonjs(),
+      babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] }),
+      terser(),
+    ],
   },
   {
     input: 'src/index.ts',
@@ -25,15 +32,22 @@ export default [
     ],
     plugins: [typescript(), terser()],
   },
-  // {
-  //   input: 'src/polyfill/index.ts',
-  //   external: ['headers-polyfill', 'abortcontroller-polyfill'],
-  //   output: [{ file: 'dist/polyfill.browser.js', format: 'iife' }],
-  //   plugins: [typescript(), terser()],
-  // },
   {
     input: './temp/src/index.d.ts',
     output: [{ file: pkg.types, format: 'es' }],
     plugins: [dts()],
+  },
+  {
+    input: 'src/polyfill.js',
+    output: {
+      file: 'dist/polyfill.js',
+      format: 'umd',
+    },
+    plugins: [
+      resolve(),
+      commonjs(),
+      babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] }),
+      terser(),
+    ],
   },
 ]

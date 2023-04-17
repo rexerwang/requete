@@ -49,7 +49,7 @@
   "bugs": {
     "url": "https://github.com/rexerwang/requete/issues"
   },
-  "homepage": "https://github.com/rexerwang/requete",
+  "homepage": "https://github.com/rexerwang/requete#readme",
   "sideEffects": false,
   "dependencies": {
     "abortcontroller-polyfill": "^1.7.5",

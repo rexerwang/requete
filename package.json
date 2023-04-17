@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "description": "A lightweight client-side (browsers) request library based on the Fetch API",
   "scripts": {
-    "build": "pnpm clean && pnpm tsc:dts && rollup -c",
+    "build": "npm run clean && npm run tsc:dts && rollup -c",
     "tsc:dts": "tsc -p tsconfig.build.json",
     "lint": "tsc --noEmit && eslint --cache --fix --ext .ts",
     "clean": "rimraf -rf ./dist ./temp",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "prepare": "husky install"
+    "postinstall": "husky install"
   },
   "type": "module",
   "exports": {
@@ -83,6 +83,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.2.1",
     "prettier": "^2.8.7",
+    "release-it": "^15.10.1",
     "rimraf": "^5.0.0",
     "rollup": "^3.20.4",
     "rollup-plugin-dts": "^5.3.0",

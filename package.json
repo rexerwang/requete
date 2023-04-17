@@ -1,6 +1,6 @@
 {
   "name": "requete",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha.0",
   "description": "A lightweight client-side (browsers) request library based on the Fetch API",
   "scripts": {
     "build": "pnpm clean && pnpm tsc:dts && rollup -c",

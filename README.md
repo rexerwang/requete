@@ -2,16 +2,16 @@
 
 > `requete` is the French word for `request`
 
-`requete` is a lightweight client-side (browsers) request library based on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+**requete** is a lightweight client-side (browsers) request library based on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
 It provides an API similar to [Axios](https://github.com/axios/axios). And supports middleware for processing requests and responses.
 
-In addition, `requete` also includes an [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) adapter, which allows it to be used in older browsers that do not support Fetch, and provides polyfills to simplify import.
+In addition, **requete** also includes an `XMLHttpRequest` adapter, which allows it to be used in older browsers that do not support Fetch, and provides polyfills to simplify import.
 
 ## Features
 
 - Use `Fetch API` on modern browsers
 - Use `XMLHttpRequest` on older browsers
-- Supports middleware for handling request and response (like [`koajs`](https://github.com/koajs/koa/blob/master/docs/guide.md#writing-middleware))
+- Supports `middleware` for handling request and response
 - Supports the Promise API
 - Transform request and response data
 - Abort requests by [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController)
@@ -31,7 +31,7 @@ const requete = create()
 const requete = create({ baseURL: 'https://your-api.com/api' })
 ```
 
-or use `Requete` class:
+or new `Requete` class:
 
 ```ts
 import { Requete } from 'requete'
@@ -70,13 +70,13 @@ requete
     // always executed
   })
 
-// Or, use `config.params` to set url search params
+// or use `config.params` to set url search params
 requete.get<IUser>('/users/profile', { params: { id: '123' } })
 requete.get<IUser>('/users/profile', { params: 'id=123' })
 
 // Make a POST request for update user profile
 requete.post('/users/profile', { id: '123', name: 'Jay Chou' })
-// Or, use `requete.request`
+// or use `requete.request`
 requete.request({
   url: '/users/profile',
   method: 'POST'

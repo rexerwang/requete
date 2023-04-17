@@ -1,5 +1,11 @@
 # Changelog
 
+# [1.0.0-alpha.1](https://github.com/rexerwang/requete/compare/1.0.0-alpha.0...1.0.0-alpha.1) (2023-04-17)
+
+### Bug Fixes
+
+- remove postinstall script ([be6af04](https://github.com/rexerwang/requete/commit/be6af04a866bb0c607e8e5a78e63157d13d81da7))
+
 # 1.0.0-alpha.0 (2023-04-17)
 
 - chore!: rename requete ([b9bf0c7](https://github.com/rexerwang/requete/commit/b9bf0c72b7d603c660f40d810a16a1fd4b039dc0))

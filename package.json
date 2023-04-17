@@ -9,6 +9,7 @@
     "clean": "rimraf -rf ./dist ./temp",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
+    "release": "release-it",
     "postinstall": "husky install"
   },
   "type": "module",
@@ -46,19 +47,7 @@
     "url": "https://github.com/rexerwang/http-request/issues"
   },
   "homepage": "https://github.com/rexerwang/http-request",
-  "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.css": [
-      "stylelint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
-  },
+  "sideEffects": false,
   "dependencies": {
     "abortcontroller-polyfill": "^1.7.5",
     "headers-polyfill": "^3.1.2",
@@ -68,6 +57,7 @@
     "@babel/preset-env": "^7.21.4",
     "@commitlint/cli": "^17.6.1",
     "@commitlint/config-conventional": "^17.6.1",
+    "@release-it/conventional-changelog": "^5.1.1",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.1.0",
     "@rollup/plugin-node-resolve": "^15.0.2",
@@ -93,5 +83,50 @@
   "packageManager": "pnpm@8.2.0",
   "engines": {
     "node": ">=18.15.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.css": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore(release): v${version}"
+    },
+    "npm": {
+      "publish": true,
+      "ignoreVersion": false
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular",
+        "infile": "CHANGELOG.md",
+        "header": "# Changelog"
+      }
+    },
+    "hooks": {
+      "before:init": [
+        "npm run lint",
+        "npm test:coverage"
+      ],
+      "after:bump": "npm run build",
+      "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }

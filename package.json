@@ -12,6 +12,14 @@
     "prepare": "husky install"
   },
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "dist/index.d.ts",
+      "import": "dist/index.mjs",
+      "require": "dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
   "types": "dist/index.d.ts",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -25,7 +33,8 @@
   "license": "MIT",
   "files": [
     "LICENSE",
-    "README.md"
+    "README.md",
+    "dist"
   ],
   "repository": {
     "type": "git",

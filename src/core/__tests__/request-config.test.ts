@@ -1,14 +1,14 @@
 import { toAny } from 'test/utils'
 
 import type { Method } from '../../types'
-import { HttpRequest } from '../HttpRequest'
+import { Requete } from '../Requete'
 
 describe('request config specs', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  const defaultHeaders = HttpRequest.defaults.headers
+  const defaultHeaders = Requete.defaults.headers
 
   const spy = vi.spyOn(global, 'fetch').mockImplementation(
     toAny(
@@ -21,7 +21,7 @@ describe('request config specs', () => {
   )
 
   it('should make a request with correct url', () => {
-    const http = new HttpRequest({ baseURL: 'https://api.mock.com/api/v1/' })
+    const http = new Requete({ baseURL: 'https://api.mock.com/api/v1/' })
 
     http.request({
       url: 'https://api.mock.com/api/v2/do-mock?id=1',
@@ -89,7 +89,7 @@ describe('request config specs', () => {
   ])(
     'should set request body and Content-Type %#: $contentType',
     ({ payload, contentType, expected }) => {
-      new HttpRequest().post('/do-mock-payload', payload)
+      new Requete().post('/do-mock-payload', payload)
 
       const headers = new Headers(defaultHeaders)
       contentType && headers.set('Content-Type', contentType)
@@ -113,7 +113,7 @@ describe('request config specs', () => {
   ] as Lowercase<Method>[])(
     'should make request by %s alias func',
     (method) => {
-      new HttpRequest()[method]('/do-mock')
+      new Requete()[method]('/do-mock')
 
       expect(spy).toBeCalledWith('/do-mock', {
         method: method.toUpperCase(),

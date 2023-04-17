@@ -1,9 +1,11 @@
-# http-request
+# requete
 
-`http-request` is a lightweight client-side (browsers) request library based on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+> `requete` is the French word for `request`
+
+`requete` is a lightweight client-side (browsers) request library based on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
 It provides an API similar to [Axios](https://github.com/axios/axios). And supports middleware for processing requests and responses.
 
-In addition, `http-request` also includes an [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) adapter, which allows it to be used in older browsers that do not support Fetch, and provides polyfills to simplify import.
+In addition, `requete` also includes an [`XMLHttpRequest`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) adapter, which allows it to be used in older browsers that do not support Fetch, and provides polyfills to simplify import.
 
 ## Features
 
@@ -18,23 +20,23 @@ In addition, `http-request` also includes an [`XMLHttpRequest`](https://develope
 
 ## Usage
 
-To use http-request, you can import it and create an instance using the `create` method:
+To use `requete`, you can import it and create an instance using the `create` method:
 
 ```ts
-import { create } from 'http-request'
+import { create } from 'requete'
 
-const http = create()
+const requete = create()
 
 // set some configs
-const http = create({ baseURL: 'https://your-api.com/api' })
+const requete = create({ baseURL: 'https://your-api.com/api' })
 ```
 
-or use `HttpRequest` class:
+or use `Requete` class:
 
 ```ts
-import { HttpRequest } from 'http-request'
+import { Requete } from 'requete'
 
-const http = new HttpRequest()
+const requete = new Requete()
 ```
 
 ### Request Methods
@@ -42,25 +44,25 @@ const http = new HttpRequest()
 The following aliases are provided for convenience:
 
 ```ts
-http.request<D = any>(config: IRequest)
-http.get<D = any>(url: string, config?: IRequest)
-http.delete<D = any>(url: string, config?: IRequest)
-http.head<D = any>(url: string, config?: IRequest)
-http.options<D = any>(url: string, config?: IRequest)
-http.post<D = any>(url: string, data?: RequestBody, config?: IRequest)
-http.put<D = any>(url: string, data?: RequestBody, config?: IRequest)
-http.patch<D = any>(url: string, data?: RequestBody, config?: IRequest)
+requete.request<D = any>(config: IRequest)
+requete.get<D = any>(url: string, config?: IRequest)
+requete.delete<D = any>(url: string, config?: IRequest)
+requete.head<D = any>(url: string, config?: IRequest)
+requete.options<D = any>(url: string, config?: IRequest)
+requete.post<D = any>(url: string, data?: RequestBody, config?: IRequest)
+requete.put<D = any>(url: string, data?: RequestBody, config?: IRequest)
+requete.patch<D = any>(url: string, data?: RequestBody, config?: IRequest)
 ```
 
 Example:
 
 ```ts
-import { create } from 'http-request'
+import { create } from 'requete'
 
-const http = create({ baseURL: 'https://your-api.com/api' })
+const requete = create({ baseURL: 'https://your-api.com/api' })
 
 // Make a GET request for user profile with ID
-http
+requete
   .get<IUser>('/users/profile?id=123')
   .then((r) => r.data)
   .catch(console.error)
@@ -69,13 +71,13 @@ http
   })
 
 // Or, use `config.params` to set url search params
-http.get<IUser>('/users/profile', { params: { id: '123' } })
-http.get<IUser>('/users/profile', { params: 'id=123' })
+requete.get<IUser>('/users/profile', { params: { id: '123' } })
+requete.get<IUser>('/users/profile', { params: 'id=123' })
 
 // Make a POST request for update user profile
-http.post('/users/profile', { id: '123', name: 'Jay Chou' })
-// Or, use `http.request`
-http.request({
+requete.post('/users/profile', { id: '123', name: 'Jay Chou' })
+// Or, use `requete.request`
+requete.request({
   url: '/users/profile',
   method: 'POST'
   data: { id: '123', name: 'Jay Chou' },
@@ -84,14 +86,14 @@ http.request({
 
 ### Use Middleware
 
-`http.use` for add a middleware function to http-request. It returns this, so is chainable.
+`requete.use` for add a middleware function to requete. It returns this, so is chainable.
 
 - The calling order of middleware should follow the **Onion Model**.
   like [`Koa middleware`](https://github.com/koajs/koa/blob/master/docs/guide.md#writing-middleware).
 - `next()` must be called asynchronously in middleware
 
 ```ts
-http
+requete
   .use(async (ctx, next) => {
     const token = getToken()
     // throw a `RequestError` if unauthorize
@@ -160,7 +162,7 @@ interface RequestConfig {
 }
 ```
 
-2. Config for request methods. (`http.request(config?: IRequest)`)
+2. Config for request methods. (`requete.request(config?: IRequest)`)
 
 ```ts
 interface IRequest extends RequestConfig {

@@ -1,5 +1,5 @@
 {
-  "name": "http-request",
+  "name": "requete",
   "version": "0.1.0",
   "description": "A lightweight client-side (browsers) request library based on the Fetch API",
   "scripts": {
@@ -27,9 +27,12 @@
   "module": "dist/index.mjs",
   "browser": "dist/index.umd.js",
   "keywords": [
-    "http-request",
+    "http",
     "request",
-    "fetch"
+    "fetch",
+    "xhr",
+    "middleware",
+    "promise"
   ],
   "author": "Rexer Wang",
   "license": "MIT",
@@ -40,13 +43,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/rexerwang/http-request.git",
+    "url": "https://github.com/rexerwang/requete.git",
     "directory": "packages/react"
   },
   "bugs": {
-    "url": "https://github.com/rexerwang/http-request/issues"
+    "url": "https://github.com/rexerwang/requete/issues"
   },
-  "homepage": "https://github.com/rexerwang/http-request",
+  "homepage": "https://github.com/rexerwang/requete",
   "sideEffects": false,
   "dependencies": {
     "abortcontroller-polyfill": "^1.7.5",

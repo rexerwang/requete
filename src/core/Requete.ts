@@ -13,7 +13,7 @@ import { RequestError } from './RequestError'
 
 type AliasConfig = Omit<IRequest, 'url' | 'data'>
 
-export class HttpRequest {
+export class Requete {
   static defaults: RequestConfig = {
     timeout: 0,
     responseType: 'json',
@@ -28,11 +28,7 @@ export class HttpRequest {
   private middlewares: RequestMiddleware[] = []
 
   constructor(config?: RequestConfig) {
-    this.configs = Object.assign(
-      { method: 'GET' },
-      HttpRequest.defaults,
-      config
-    )
+    this.configs = Object.assign({ method: 'GET' }, Requete.defaults, config)
 
     const SupportedAdapter = [FetchAdapter, XhrAdapter].find((i) => i.supported)
     if (!SupportedAdapter)
@@ -78,7 +74,7 @@ export class HttpRequest {
 
     request.url = getUri(request)
     request.headers = mergeHeaders(
-      HttpRequest.defaults.headers,
+      Requete.defaults.headers,
       this.configs?.headers,
       config.headers
     )

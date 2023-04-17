@@ -1,6 +1,6 @@
 import { toAny } from 'test/utils'
 
-import { HttpRequest } from '../HttpRequest'
+import { Requete } from '../Requete'
 
 describe('response specs', () => {
   beforeEach(() => {
@@ -33,7 +33,7 @@ describe('response specs', () => {
         toAny(vi.fn().mockResolvedValue(response))
       )
 
-      const res = await new HttpRequest().get('/do-mock', {
+      const res = await new Requete().get('/do-mock', {
         responseType: dataType as any,
       })
 

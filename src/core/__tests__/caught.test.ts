@@ -1,7 +1,7 @@
 import { toAny } from 'test/utils'
 
-import { HttpRequest } from '../HttpRequest'
 import { RequestError } from '../RequestError'
+import { Requete } from '../Requete'
 
 describe('caught specs', () => {
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('caught specs', () => {
       )
     )
 
-    const http = new HttpRequest()
+    const http = new Requete()
 
     await expect(http.get('/do-mock')).rejects.toThrow(RequestError)
     await expect(http.get('/do-mock')).rejects.toThrow(
@@ -47,7 +47,7 @@ describe('caught specs', () => {
   })
 
   it('should caught RequestError when middleware throws', async () => {
-    const http = new HttpRequest().use(async (ctx, next) => {
+    const http = new Requete().use(async (ctx, next) => {
       if (ctx.request.method === 'GET') ctx.throw('not allowed')
       await next()
       if (ctx.request.method === 'POST') ctx.throw('post error')
@@ -60,7 +60,7 @@ describe('caught specs', () => {
   it('should caught when call ctx funcs in wrong way', async () => {
     // ctx.abort()
     await expect(
-      new HttpRequest()
+      new Requete()
         .use(async (ctx, next) => {
           await next()
           ctx.abort()
@@ -70,7 +70,7 @@ describe('caught specs', () => {
 
     // ctx.set()
     await expect(
-      new HttpRequest()
+      new Requete()
         .use(async (ctx, next) => {
           await next()
           ctx.set('a', 'b')
@@ -96,7 +96,7 @@ describe('caught specs', () => {
       })
     )
 
-    const http = new HttpRequest().use(async (ctx, next) => {
+    const http = new Requete().use(async (ctx, next) => {
       ctx.abort().abort('abort request')
       await next()
     })
@@ -105,8 +105,8 @@ describe('caught specs', () => {
   })
 
   it('should caught when wrong type request body', async () => {
-    await expect(
-      new HttpRequest().post('/do-mock', true as any)
-    ).rejects.toThrow(/Invalid request body type/)
+    await expect(new Requete().post('/do-mock', true as any)).rejects.toThrow(
+      /Invalid request body type/
+    )
   })
 })

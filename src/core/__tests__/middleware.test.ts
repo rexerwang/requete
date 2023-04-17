@@ -1,6 +1,6 @@
 import { toAny } from 'test/utils'
 
-import { HttpRequest } from '../HttpRequest'
+import { Requete } from '../Requete'
 
 describe('middleware specs', () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('middleware specs', () => {
     const before = vi.fn()
     const after = vi.fn()
 
-    const http = new HttpRequest()
+    const http = new Requete()
       .use(async (ctx, next) => {
         before(ctx.request)
         await next()
@@ -53,7 +53,7 @@ describe('middleware specs', () => {
   })
 
   it('should set request header correctly in middleware', async () => {
-    const http = new HttpRequest()
+    const http = new Requete()
     http.use(async (ctx, next) => {
       ctx.set('Authorization', 'mock')
       ctx.set({ 'x-client-by': 'mock' })
@@ -72,7 +72,7 @@ describe('middleware specs', () => {
   })
 
   it('should set abortSignal correctly in middleware', async () => {
-    const http = new HttpRequest()
+    const http = new Requete()
     let controller: any
     http.use(async (ctx, next) => {
       controller = ctx.abort()

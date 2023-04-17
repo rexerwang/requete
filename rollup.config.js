@@ -11,7 +11,7 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      name: 'HttpRequest',
+      name: 'Requete',
       file: pkg.browser,
       format: 'umd',
     },

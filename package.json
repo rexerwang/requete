@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A lightweight client-side (browsers) request library based on the Fetch API",
   "scripts": {
-    "build": "npm run clean && npm run tsc:dts && rollup -c",
+    "build": "pnpm clean && pnpm tsc:dts && rollup -c",
     "tsc:dts": "tsc -p tsconfig.build.json",
     "lint": "tsc --noEmit && eslint --cache --fix --ext .ts",
     "clean": "rimraf -rf ./dist ./temp",
@@ -120,10 +120,10 @@
     },
     "hooks": {
       "before:init": [
-        "npm run lint",
-        "npm test:coverage"
+        "pnpm lint",
+        "pnpm test:coverage"
       ],
-      "after:bump": "npm run build",
+      "after:bump": "pnpm build",
       "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
     }
   },

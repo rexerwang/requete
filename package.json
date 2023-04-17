@@ -1,0 +1,56 @@
+{
+  "name": "http-request",
+  "version": "0.1.0",
+  "description": "A lightweight client-side (browsers) request library based on the Fetch API",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "http-request",
+    "request",
+    "fetch"
+  ],
+  "author": "Rexer Wang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rexerwang/http-request/issues"
+  },
+  "homepage": "https://github.com/rexerwang/http-request",
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.css": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
+    "prettier": "^2.8.7",
+    "rollup": "^3.20.4",
+    "typescript": "^5.0.4",
+    "vitest": "^0.30.1"
+  },
+  "packageManager": "pnpm@8.2.0",
+  "engines": {
+    "node": ">=18.15.0"
+  }
+}

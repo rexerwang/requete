@@ -10,3 +10,5 @@ export * from './types'
 export function create(config?: RequestConfig) {
   return new Requete(config)
 }
+
+export default create()

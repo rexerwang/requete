@@ -39,9 +39,9 @@ const withMinify = (config, sourcemap = true) => {
 
 export default [
   ...withMinify({
-    input: 'src/index.ts',
+    input: 'src/global.ts',
     output: {
-      name: 'Requete',
+      name: pkg.name,
       file: dist(pkg.browser),
       format: 'umd',
       banner,
@@ -49,12 +49,25 @@ export default [
     plugins: [typescript()],
   }),
   {
+    input: 'src/global.ts',
+    external: ['query-string'],
+    output: {
+      file: dist(pkg.main),
+      format: 'cjs',
+      generatedCode: { constBindings: true, objectShorthand: true },
+      banner,
+    },
+    plugins: [typescript()],
+  },
+  {
     input: 'src/index.ts',
     external: ['query-string'],
-    output: [
-      { file: dist(pkg.main), format: 'cjs', banner },
-      { file: dist(pkg.module), format: 'es', banner },
-    ],
+    output: {
+      file: dist(pkg.module),
+      format: 'es',
+      generatedCode: { constBindings: true, objectShorthand: true },
+      banner,
+    },
     plugins: [typescript()],
   },
   {

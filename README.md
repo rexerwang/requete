@@ -2,8 +2,8 @@
 
 > `requete` is the French word for `request`
 
-**requete** is a lightweight client-side (browsers) request library based on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
-It provides an API similar to [Axios](https://github.com/axios/axios). And supports middleware for processing requests and responses.
+**requete** is a lightweight client-side request library based on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+It provides an API similar to `Axios`. And supports middleware for processing requests and responses.
 
 In addition, **requete** also includes an `XMLHttpRequest` adapter, which allows it to be used in older browsers that do not support `Fetch`, and provides polyfills to simplify import.
 
@@ -18,20 +18,62 @@ In addition, **requete** also includes an `XMLHttpRequest` adapter, which allows
 - Automatic transforms for JSON response data, and supports custom transformer
 - Automatic data object serialization to `multipart/form-data` and `x-www-form-urlencoded` body encodings
 
+## Install
+
+### NPM
+
+```sh
+pnpm add requete
+```
+
+```sh
+yarn add requete
+```
+
+```sh
+npm i -S requete
+```
+
+### CDN
+
+```html
+<!-- using jsdelivr -->
+<script src="https://cdn.jsdelivr.net/npm/requete"></script>
+<!-- or using unpkg -->
+<script src="https://unpkg.com/requete"></script>
+```
+
 ## Usage
 
-To use `requete`, you can import it and create an instance using the `create` method:
+First, you can import `requete` and use it directly.
+
+```ts
+import requete from 'requete'
+
+// Make a GET request
+requete.get('https://your-api.com/api/posts')
+
+// Make a POST request
+requete.post('https://your-api.com/api/posts', { id: 1 })
+```
+
+You can also create an instance and specify request configs by calling the `create()` function:
 
 ```ts
 import { create } from 'requete'
 
-const requete = create()
-
-// set some configs
 const requete = create({ baseURL: 'https://your-api.com/api' })
+
+// Make a GET request
+requete
+  .get<IPost>('/posts')
+  .then((r) => r.data)
+  .catch((error) => {
+    error.print() // error as `RequestError`
+  })
 ```
 
-or new `Requete` class:
+Similarly, you can also use `Requete` class:
 
 ```ts
 import { Requete } from 'requete'
@@ -39,19 +81,52 @@ import { Requete } from 'requete'
 const requete = new Requete()
 ```
 
+For commonjs/AMD module, `require` it:
+
+```js
+const requete = require('requete')
+
+// use default instance
+requete.get('https://your-api.com/api/posts')
+
+// create new instance
+const http = requete.create({ baseURL: 'https://your-api.com/api' })
+// or new class
+// const http = requete.Requete()
+
+// Make a POST request
+http.post('posts', { id: 1 })
+```
+
+For browser:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/requete"></script>
+
+<script>
+  // use default instance
+  requete.get('/api/posts')
+
+  // create new instance
+  const http = requete.create()
+  // or new class
+  // const http = requete.Requete()
+</script>
+```
+
 ### Request Methods
 
 The following aliases are provided for convenience:
 
 ```ts
-requete.request<D = any>(config: IRequest)
-requete.get<D = any>(url: string, config?: IRequest)
-requete.delete<D = any>(url: string, config?: IRequest)
-requete.head<D = any>(url: string, config?: IRequest)
-requete.options<D = any>(url: string, config?: IRequest)
-requete.post<D = any>(url: string, data?: RequestBody, config?: IRequest)
-requete.put<D = any>(url: string, data?: RequestBody, config?: IRequest)
-requete.patch<D = any>(url: string, data?: RequestBody, config?: IRequest)
+requete.request<D = any>(config: IRequest): Promise<IContext<D>>
+requete.get<D = any>(url: string, config?: IRequest): Promise<IContext<D>>
+requete.delete<D = any>(url: string, config?: IRequest): Promise<IContext<D>>
+requete.head<D = any>(url: string, config?: IRequest): Promise<IContext<D>>
+requete.options<D = any>(url: string, config?: IRequest): Promise<IContext<D>>
+requete.post<D = any>(url: string, data?: RequestBody, config?: IRequest): Promise<IContext<D>>
+requete.put<D = any>(url: string, data?: RequestBody, config?: IRequest): Promise<IContext<D>>
+requete.patch<D = any>(url: string, data?: RequestBody, config?: IRequest): Promise<IContext<D>>
 ```
 
 Example:
@@ -382,7 +457,17 @@ If needed, you can directly import `requete/polyfill`. It includes polyfills for
 - Headers`s by [headers-polyfill](https://github.com/mswjs/headers-polyfill)
 - AbortController`s by [abortcontroller-polyfill](https://github.com/mo/abortcontroller-polyfill)
 
-```ts
-// in your entry file
+**In ES Module:**
+
+```js
 import 'requete/polyfill'
+```
+
+**In Browser:**
+
+```html
+<!-- using jsdelivr -->
+<script src="https://cdn.jsdelivr.net/npm/requete/polyfill"></script>
+<!-- using unpkg -->
+<script src="https://unpkg.com/requete/polyfill"></script>
 ```

@@ -11,9 +11,9 @@ module.exports = (req, res, next) => {
     ? 'application/json'
     : 'application/javascript'
 
-  res.status(200).set('Content-Type', contentType)
-
   fs.createReadStream(file)
+    .on('open', () => res.status(200).set('Content-Type', contentType))
     .on('end', () => res.end())
+    .on('error', (e) => res.status(404).send(e.message))
     .pipe(res)
 }

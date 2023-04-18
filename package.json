@@ -9,7 +9,8 @@
     "clean": "rimraf -rf ./dist ./temp",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "release": "release-it"
+    "release": "release-it",
+    "postinstall": "husky install"
   },
   "type": "module",
   "exports": {

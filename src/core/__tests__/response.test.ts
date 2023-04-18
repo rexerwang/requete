@@ -29,6 +29,7 @@ describe('response specs', () => {
         response.text = vi.fn().mockResolvedValue(JSON.stringify(data))
       }
 
+      // mock fetch api
       vi.spyOn(global, 'fetch').mockImplementation(
         toAny(vi.fn().mockResolvedValue(response))
       )

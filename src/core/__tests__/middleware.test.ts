@@ -1,19 +1,16 @@
-import { toAny } from 'test/utils'
-
+import { FetchAdapter } from '../../adapter'
 import { Requete } from '../Requete'
 
 describe('middleware specs', () => {
   beforeEach(() => {
-    vi.spyOn(global, 'fetch').mockImplementation(
-      toAny(
-        vi.fn().mockResolvedValue({
-          ok: true,
-          status: 200,
-          statusText: 'ok',
-          text: vi.fn().mockResolvedValue('null'),
-          url: '/do-mock',
-        })
-      )
+    vi.spyOn(FetchAdapter.prototype, 'request').mockImplementation(
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        url: '/do-mock',
+        body: () => Promise.resolve('null'),
+      })
     )
   })
 
@@ -21,7 +18,7 @@ describe('middleware specs', () => {
     const before = vi.fn()
     const after = vi.fn()
 
-    const http = new Requete()
+    const requete = new Requete()
       .use(async (ctx, next) => {
         before(ctx.request)
         await next()
@@ -38,7 +35,7 @@ describe('middleware specs', () => {
         after(3)
       })
 
-    const res = await http.post('/do-mock')
+    const res = await requete.post('/do-mock')
 
     expect(res.request).toBeDefined()
     expect(res.data).toBeDefined()
@@ -53,15 +50,15 @@ describe('middleware specs', () => {
   })
 
   it('should set request header correctly in middleware', async () => {
-    const http = new Requete()
-    http.use(async (ctx, next) => {
+    const requete = new Requete()
+    requete.use(async (ctx, next) => {
       ctx.set('Authorization', 'mock')
       ctx.set({ 'x-client-by': 'mock' })
       ctx.set('x')
       await next()
     })
 
-    const res = await http.post('/do-mock')
+    const res = await requete.post('/do-mock')
     expect(res.request.headers).toEqual(
       new Headers({
         Accept: 'application/json, text/plain, */*',
@@ -72,14 +69,14 @@ describe('middleware specs', () => {
   })
 
   it('should set abortSignal correctly in middleware', async () => {
-    const http = new Requete()
+    const requete = new Requete()
     let controller: any
-    http.use(async (ctx, next) => {
+    requete.use(async (ctx, next) => {
       controller = ctx.abort()
       await next()
     })
 
-    const res = await http.post('/do-mock', undefined)
+    const res = await requete.post('/do-mock', undefined)
     expect(res.request.abort).toEqual(controller)
   })
 })

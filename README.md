@@ -2,8 +2,8 @@
 
 > `requete` is the French word for `request`
 
-**requete** is a lightweight client-side request library based on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
-It provides an API similar to `Axios`. And supports middleware for processing requests and responses.
+**requete** is a lightweight client-side HTTP request library based on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), and supports middleware for processing requests and responses.
+It provides APIs similar to `Axios`.
 
 In addition, **requete** also includes an `XMLHttpRequest` adapter, which allows it to be used in older browsers that do not support `Fetch`, and provides polyfills to simplify import.
 
@@ -324,13 +324,14 @@ interface IContext<Data = any> {
 }
 ```
 
-In the middleware, `ctx`(IContext) is the first argument. Before sending the request (before `await next()`), you can use methods such as ctx.set, ctx.throw, ctx.abort. Otherwise, a `RequestError` will be thrown if these methods are called in other cases.
+In middleware, the first argument is `ctx` of type `IContext`. You can call methods such as `ctx.set`, `ctx.throw`, `ctx.abort` before sending the request (i.e., before the await next() statement).  
+Otherwise, if these methods are called in other cases, a `RequestError` will be thrown.
 
 ## RequestError
 
 `RequestError` inherits from `Error`, contains the request context information, and provides the formatted output method (`print()`).
 
-> All exceptions in the `requete` are `RequestError`.
+It should be noted that all exceptions in requete are `RequestError`.
 
 ```ts
 class RequestError extends Error {
@@ -372,7 +373,7 @@ try {
 
 ## TimeoutAbortController
 
-`TimeoutAbortController` is used to auto-abort requests when timeout, and you can also call `abort()` to terminate them at any time. It is implemented based on [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
+`TimeoutAbortController` is used to auto-abort requests when timeout, and you can also call `abort()` to terminate them at any time. It is implemented based on [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
 
 In the requete configuration, you can add the `TimeoutAbortController` (or a regular `AbortController`) through the abort field.  
 It should be noted that if you set the timeout in the FetchAdapter and did not pass in abort, requete will add the `TimeoutAbortController` by default to achieve timeout termination.
@@ -415,17 +416,22 @@ requete.get('/download-large-thing', { timeout: 60000 })
 
 ## Request Adapter
 
-There are two request adapters in `Requete`: `FetchAdapter` and `XhrAdapter`.
+There are two request adapters in requete: `FetchAdapter` and `XhrAdapter`.
 If the current browser environment does not support the `FetchAdapter`, `XhrAdapter` will be used instead.
 
-Of course, you can also customize which adapter to use by declaring the adapter field in the request config.  
+Of course, you can also customize which adapter to use by declaring the `adapter` field in config.
 For example, when obtaining download or upload progress events, you can choose to use the `XhrAdapter`. (like [Axios](https://github.com/axios/axios#request-config))
 
-Additionally, `Requete` also supports custom adapters by inheriting the `abstract class Adapter` and implementing the `request` method.
+```js
+requete.get('/download-or-upload', {
+  adapter: new XhrAdapter({ onDownloadProgress(e) {}, onUploadProgress(e) {} }),
+})
+```
+
+Additionally, `requete` also supports custom adapters by inheriting the `abstract class Adapter` and implementing the `request` method.
 
 ```ts
 abstract class Adapter {
-  static readonly supported: boolean
   abstract request<D>(ctx: IContext<D>): Promise<IResponse<D>>
 }
 ```
@@ -438,8 +444,6 @@ abstract class Adapter {
 import { Adapter } from 'requete'
 
 export class CustomAdapter extends Adapter {
-  static readonly supported = true
-
   async request(ctx: IContext) {
     // do request
 

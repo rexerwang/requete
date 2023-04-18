@@ -7,8 +7,29 @@ import {
 import type { IContext, IResponse } from '../types'
 import { Adapter } from './Adapter'
 
+export interface IXhrProgressEvent {
+  loaded: number
+  total?: number
+  progress?: number
+  bytes: number
+  rate?: number
+  estimated?: number
+  upload?: boolean
+  download?: boolean
+  event?: any
+}
+
+type XhrAdapterOptions = {
+  onDownloadProgress?(e: IXhrProgressEvent): void
+  onUploadProgress?(e: IXhrProgressEvent): void
+}
+
 export class XhrAdapter extends Adapter {
   static readonly supported = typeof XMLHttpRequest !== 'undefined'
+
+  constructor(private options?: XhrAdapterOptions) {
+    super()
+  }
 
   private transformRequest(xhr: XMLHttpRequest, ctx: IContext) {
     const { request } = ctx
@@ -125,18 +146,18 @@ export class XhrAdapter extends Adapter {
         xhr = null
       }
 
-      if (ctx.request.onDownloadProgress) {
+      if (this.options?.onDownloadProgress) {
         xhr.addEventListener(
           'progress',
-          progressEventReducer(ctx.request.onDownloadProgress, true)
+          progressEventReducer(this.options.onDownloadProgress, true)
         )
       }
 
       // Not all browsers support upload events
-      if (ctx.request.onUploadProgress && xhr.upload) {
+      if (this.options?.onUploadProgress && xhr.upload) {
         xhr.addEventListener(
           'progress',
-          progressEventReducer(ctx.request.onUploadProgress, true)
+          progressEventReducer(this.options.onUploadProgress, true)
         )
       }
 

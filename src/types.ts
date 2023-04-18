@@ -16,18 +16,6 @@ export type RequestBody =
   | Record<string, any>
   | Record<string, any>[]
 
-export interface IXhrProgressEvent {
-  loaded: number
-  total?: number
-  progress?: number
-  bytes: number
-  rate?: number
-  estimated?: number
-  upload?: boolean
-  download?: boolean
-  event?: any
-}
-
 export interface RequestConfig {
   baseURL?: string
   /** request timeout (ms) */
@@ -78,10 +66,6 @@ export interface IRequest extends RequestConfig {
   abort?: TimeoutAbortController | null
   /** specify request adapter */
   adapter?: Adapter
-  /** **(XhrAdapter Only)** download progress event */
-  onDownloadProgress?(e: IXhrProgressEvent): void
-  /** **(XhrAdapter Only)** upload progress event */
-  onUploadProgress?(e: IXhrProgressEvent): void
   /** flexible custom field */
   custom?: any
 }

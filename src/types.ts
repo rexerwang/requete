@@ -67,12 +67,12 @@ export interface IRequest extends RequestConfig {
    * @default GET
    */
   method?: Method
-  /** An string or object to set querystring of url */
+  /** A string or object to set querystring of url */
   params?: string | Record<string, any>
   /** request`s body */
   data?: RequestBody
   /**
-   * An TimeoutAbortController to set request's signal.
+   * A TimeoutAbortController to set request's signal.
    * @default TimeoutAbortController
    */
   abort?: TimeoutAbortController | null

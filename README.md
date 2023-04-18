@@ -14,7 +14,7 @@ In addition, **requete** also includes an `XMLHttpRequest` adapter, which allows
 - Supports `middleware` for handling request and response
 - Supports the Promise API
 - Transform request and response data
-- Abort requests by [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController)
+- Abort requests by [`TimeoutAbortController`](#timeoutabortcontroller)
 - Automatic transforms for JSON response data, and supports custom transformer
 - Automatic data object serialization to `multipart/form-data` and `x-www-form-urlencoded` body encodings
 
@@ -91,6 +91,7 @@ requete.request({
 - The calling order of middleware should follow the **Onion Model**.
   like [`Koa middleware`](https://github.com/koajs/koa/blob/master/docs/guide.md#writing-middleware).
 - `next()` must be called asynchronously in middleware
+- `ctx` is the requete context object, type `IContext`. more information in [here](#response-typings).
 
 ```ts
 requete
@@ -172,12 +173,12 @@ interface IRequest extends RequestConfig {
    * @default GET
    */
   method?: Method
-  /** An string or object to set querystring of url */
+  /** A string or object to set querystring of url */
   params?: string | Record<string, any>
   /** request`s body */
   data?: RequestBody
   /**
-   * An TimeoutAbortController to set request's signal.
+   * A TimeoutAbortController to set request's signal.
    * @default TimeoutAbortController
    */
   abort?: TimeoutAbortController | null
@@ -197,7 +198,12 @@ interface IRequest extends RequestConfig {
 The response for a request is a context object, specifically of type `IContext`, which contains the following information.
 
 ```ts
-interface IResponse<Data = any> {
+interface IContext<Data = any> {
+  /**
+   * request config.
+   * and empty `Headers` object as default
+   */
+  request: IRequest & { headers: Headers }
   headers: Headers
   ok: boolean
   redirected: boolean
@@ -209,14 +215,7 @@ interface IResponse<Data = any> {
   data: Data
   /** response text when responseType is `json` or `text` */
   responseText?: string
-}
 
-interface IContext<Data = any> extends IResponse<Data> {
-  /**
-   * request config.
-   * and empty `Headers` object as default
-   */
-  request: IRequest & { headers: Headers }
   /**
    * set request headers
    * *And header names are matched by case-insensitive byte sequence.*
@@ -234,4 +233,143 @@ interface IContext<Data = any> extends IResponse<Data> {
    */
   abort(): TimeoutAbortController
 }
+```
+
+In the middleware, `ctx`(IContext) is the first argument. Before sending the request (before `await next()`), you can use methods such as ctx.set, ctx.throw, ctx.abort. Otherwise, a `RequestError` will be thrown if these methods are called in other cases.
+
+## RequestError
+
+`RequestError` inherits from `Error`, contains the request context information, and provides the formatted output method (`print()`).
+
+> All exceptions in the `requete` are `RequestError`.
+
+```ts
+class RequestError extends Error {
+  name = 'RequestError'
+  ctx: IContext
+
+  constructor(errMsg: string | Error, ctx: IContext)
+
+  print(): this
+}
+```
+
+### Example
+
+```ts
+import { RequestError } from 'requete'
+
+// if needed
+throw new RequestError('<error message>', ctx)
+throw new RequestError(new Error('<error message>', ctx))
+
+// in requete middleware
+ctx.throw('<error message>')
+
+// promise.catch
+requete.post('/api').catch((e) => {
+  e.print() // formatted output
+  console.log(e.status) // response status
+  console.log(e.headers) // response header
+})
+
+// try-catch
+try {
+  await requete.post('/api')
+} catch (e) {
+  console.log(e.name) // "RequestError"
+}
+```
+
+## TimeoutAbortController
+
+`TimeoutAbortController` is used to auto-abort requests when timeout, and you can also call `abort()` to terminate them at any time. It is implemented based on [`AbortController`](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
+
+In the requete configuration, you can add the `TimeoutAbortController` (or a regular `AbortController`) through the abort field.  
+It should be noted that if you set the timeout in the FetchAdapter and did not pass in abort, requete will add the `TimeoutAbortController` by default to achieve timeout termination.
+
+If the target browser does not support `AbortController`, please [add a polyfill](#polyfills) before using it.
+
+```ts
+class TimeoutAbortController {
+  /** if not supported, it will throw error when `new` */
+  static readonly supported: boolean
+
+  /** timeout ms */
+  constructor(timeout: number)
+
+  get signal(): AbortSignal
+
+  abort(reason?: any): void
+
+  /** clear setTimeout */
+  clear(): void
+}
+```
+
+### Example
+
+```ts
+import { TimeoutAbortController } from 'requete'
+
+// set 60s timeout
+const controller = new TimeoutAbortController(60000)
+requete.get('/download-large-thing', { abort: controller }).catch((e) => {
+  e.print() // "canceled"
+})
+// you can abort request if needed
+controller.abort('canceled')
+
+// or timeout config
+requete.get('/download-large-thing', { timeout: 60000 })
+```
+
+## Request Adapter
+
+There are two request adapters in Requete: `FetchAdapter` and `XhrAdapter`.
+If the current browser environment does not support the Fetch API, Xhr will be used instead.
+
+Of course, you can also customize which adapter to use by declaring the adapter field in the request config.
+For example, when obtaining download or upload progress events, you can choose to use the XhrAdapter.
+
+Additionally, Requete also supports custom adapters by inheriting the `abstract class Adapter` and implementing the `request` method.
+
+```ts
+// typings
+abstract class Adapter {
+  static readonly supported: boolean
+  abstract request<D>(ctx: IContext<D>): Promise<IResponse<D>>
+}
+```
+
+### Example
+
+```ts
+// CustomAdapter.ts
+
+import { Adapter } from 'requete'
+
+export class CustomAdapter extends Adapter {
+  static readonly supported = true
+
+  async request(ctx: IContext) {
+    // do request
+
+    return response
+  }
+}
+```
+
+## Polyfills
+
+If needed, you can directly import `requete/polyfill`. It includes polyfills for `Headers` and `AbortController`.
+
+`requete/polyfill` will determine whether to add polyfills based on the user's browser.
+
+- Headers`s by [headers-polyfill](https://github.com/mswjs/headers-polyfill)
+- AbortController`s by [abortcontroller-polyfill](https://github.com/mo/abortcontroller-polyfill)
+
+```ts
+// in your entry file
+import 'requete/polyfill'
 ```

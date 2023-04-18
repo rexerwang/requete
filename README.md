@@ -5,7 +5,7 @@
 **requete** is a lightweight client-side (browsers) request library based on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
 It provides an API similar to [Axios](https://github.com/axios/axios). And supports middleware for processing requests and responses.
 
-In addition, **requete** also includes an `XMLHttpRequest` adapter, which allows it to be used in older browsers that do not support Fetch, and provides polyfills to simplify import.
+In addition, **requete** also includes an `XMLHttpRequest` adapter, which allows it to be used in older browsers that do not support `Fetch`, and provides polyfills to simplify import.
 
 ## Features
 
@@ -193,6 +193,20 @@ interface IRequest extends RequestConfig {
 }
 ```
 
+### Request Config Defaults
+
+You can specify request config defaults globally, that will be applied to every request.
+And the `Requete.defaults` is defined [here](https://github.com/rexerwang/requete/blob/main/src/core/Requete.ts#L17).
+
+```ts
+import { Requete } from 'requete'
+
+Requete.defaults.baseURL = 'https://your-api.com'
+Requete.defaults.timeout = 60000
+Requete.defaults.responseType = 'json'
+Requete.defaults.headers = { 'X-Request-Id': 'requete' }
+```
+
 ## Response Typings
 
 The response for a request is a context object, specifically of type `IContext`, which contains the following information.
@@ -326,16 +340,15 @@ requete.get('/download-large-thing', { timeout: 60000 })
 
 ## Request Adapter
 
-There are two request adapters in Requete: `FetchAdapter` and `XhrAdapter`.
-If the current browser environment does not support the Fetch API, Xhr will be used instead.
+There are two request adapters in `Requete`: `FetchAdapter` and `XhrAdapter`.
+If the current browser environment does not support the `FetchAdapter`, `XhrAdapter` will be used instead.
 
-Of course, you can also customize which adapter to use by declaring the adapter field in the request config.
-For example, when obtaining download or upload progress events, you can choose to use the XhrAdapter.
+Of course, you can also customize which adapter to use by declaring the adapter field in the request config.  
+For example, when obtaining download or upload progress events, you can choose to use the `XhrAdapter`. (like [Axios](https://github.com/axios/axios#request-config))
 
-Additionally, Requete also supports custom adapters by inheriting the `abstract class Adapter` and implementing the `request` method.
+Additionally, `Requete` also supports custom adapters by inheriting the `abstract class Adapter` and implementing the `request` method.
 
 ```ts
-// typings
 abstract class Adapter {
   static readonly supported: boolean
   abstract request<D>(ctx: IContext<D>): Promise<IResponse<D>>

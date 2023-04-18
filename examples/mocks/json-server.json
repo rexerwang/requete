@@ -1,0 +1,5 @@
+{
+  "port": 3000,
+  "middlewares": "./examples/mocks/middlewares.cjs",
+  "static": "./examples"
+}

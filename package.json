@@ -9,6 +9,7 @@
     "clean": "rimraf -rf ./dist ./temp",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
+    "serve": "json-server -c ./examples/mocks/json-server.json ./examples/mocks/db.json",
     "release": "release-it",
     "postinstall": "husky install"
   },
@@ -69,6 +70,7 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "headers-polyfill": "^3.1.2",
     "husky": "^8.0.3",
+    "json-server": "^0.17.3",
     "lint-staged": "^13.2.1",
     "prettier": "^2.8.7",
     "release-it": "^15.10.1",

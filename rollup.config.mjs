@@ -16,7 +16,7 @@ const dist = (file = '') => path.join('dist', file)
 const useBabel = () =>
   babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] })
 
-const withMinify = (config, sourcemap = true) => {
+const withMinify = (config) => {
   const min = (file) => {
     const ext = path.extname(file)
     return file.slice(0, -ext.length) + '.min' + ext
@@ -25,7 +25,6 @@ const withMinify = (config, sourcemap = true) => {
   const { plugins, output } = config
 
   plugins.push(resolve(), useBabel())
-  output.sourcemap = sourcemap
 
   return [
     config,

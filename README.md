@@ -254,15 +254,11 @@ interface IRequest extends RequestConfig {
   data?: RequestBody
   /**
    * A TimeoutAbortController to set request's signal.
-   * @default TimeoutAbortController
+   * @default new TimeoutAbortController(timeout)
    */
   abort?: TimeoutAbortController | null
   /** specify request adapter */
   adapter?: Adapter
-  /** **(XhrAdapter Only)** download progress event */
-  onDownloadProgress?(e: IXhrProgressEvent): void
-  /** **(XhrAdapter Only)** upload progress event */
-  onUploadProgress?(e: IXhrProgressEvent): void
   /** flexible custom field */
   custom?: any
 }

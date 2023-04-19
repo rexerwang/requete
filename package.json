@@ -1,6 +1,6 @@
 {
   "name": "requete",
-  "version": "1.0.0-alpha.1",
+  "version": "0.1.0",
   "description": "A lightweight client-side HTTP request library based on the Fetch API and supports middleware.",
   "scripts": {
     "build": "pnpm clean && pnpm tsc:dts && rollup -c",
@@ -109,6 +109,9 @@
       "publishPath": "./dist",
       "ignoreVersion": false
     },
+    "github": {
+      "release": true
+    },
     "plugins": {
       "@release-it/conventional-changelog": {
         "preset": "angular",
@@ -119,7 +122,7 @@
     "hooks": {
       "before:init": [
         "pnpm lint",
-        "pnpm test:coverage"
+        "pnpm test run"
       ],
       "after:bump": "pnpm build",
       "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."

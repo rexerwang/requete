@@ -6,7 +6,7 @@ export function getUri(config: IRequest) {
   let url = config.url
 
   if (!url.includes('://') && config.baseURL) {
-    url = config.baseURL.replace(/\/+$/, '') + '/' + url.replace(/^\//, '')
+    url = config.baseURL.replace(/\/+$/, '') + '/' + url.replace(/^\/+/, '')
   }
 
   if (config.params) {

@@ -467,7 +467,7 @@ import 'requete/polyfill'
 
 ```html
 <!-- using jsdelivr -->
-<script src="https://cdn.jsdelivr.net/npm/requete/polyfill"></script>
+<script src="https://cdn.jsdelivr.net/npm/requete/dist/polyfill.min.js"></script>
 <!-- using unpkg -->
-<script src="https://unpkg.com/requete/polyfill"></script>
+<script src="https://unpkg.com/requete/dist/polyfill.min.js"></script>
 ```

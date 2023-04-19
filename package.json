@@ -39,8 +39,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rexerwang/requete.git",
-    "directory": "packages/react"
+    "url": "https://github.com/rexerwang/requete.git"
   },
   "bugs": {
     "url": "https://github.com/rexerwang/requete/issues"
@@ -85,15 +84,11 @@
     "node": ">=18.15.0"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": [
+    "*.ts": [
       "eslint --fix",
       "prettier --write"
     ],
-    "*.css": [
-      "stylelint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
+    "*.{mjs,cjs,js,json,md,html}": [
       "prettier --write"
     ]
   },

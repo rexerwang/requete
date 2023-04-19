@@ -5,6 +5,7 @@
 [![npm version](https://img.shields.io/npm/v/requete.svg?style=flat)](https://npm.im/requete)
 [![install size](https://packagephobia.com/badge?p=requete)](https://packagephobia.com/result?p=requete)
 [![npm bundle size](https://img.shields.io/bundlephobia/min/requete?style=flat)](https://bundlephobia.com/package/requete)
+[![build status](https://github.com/rexerwang/requete/actions/workflows/ci.yml/badge.svg)](https://github.com/rexerwang/requete/actions/workflows/ci.yml)
 
 **requete** is a lightweight client-side HTTP request library based on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API), and supports middleware for processing requests and responses.
 It provides APIs similar to `Axios`.

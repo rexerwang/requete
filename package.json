@@ -102,7 +102,10 @@
   },
   "release-it": {
     "git": {
-      "commitMessage": "chore(release): v${version}"
+      "commitMessage": "chore(release): v${version}",
+      "tagName": "v${version}",
+      "tagAnnotation": "Release v${version}",
+      "requireBranch": "main"
     },
     "npm": {
       "publish": true,
@@ -110,7 +113,8 @@
       "ignoreVersion": false
     },
     "github": {
-      "release": true
+      "release": true,
+      "releaseName": "Release v${version}"
     },
     "plugins": {
       "@release-it/conventional-changelog": {

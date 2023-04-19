@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>requete es imports</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      code {
+        font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+          monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div class="posts">
+        <h4>/posts response</h4>
+        <code></code>
+      </div>
+      <div class="comments">
+        <h4>/comments response</h4>
+        <code></code>
+      </div>
+      <div class="profile">
+        <h4>/profile response</h4>
+        <code></code>
+      </div>
+    </main>
+    <script src="/requete/polyfill.js"></script>
+    <script type="module">
+      import requete from '/requete/index.mjs'
+
+      const output = (obj) => JSON.stringify(obj, null, 2)
+      const logger = (r) => {
+        console.log(r.request.method, r.url, r.status, `(${r.statusText})`)
+      }
+
+      const postsEl = document.querySelector('.posts code')
+      const commentsEl = document.querySelector('.comments code')
+      const profileEl = document.querySelector('.profile code')
+
+      requete
+        .get('/posts')
+        .then((r) => {
+          logger(r)
+          postsEl.innerHTML = output(r.data)
+        })
+        .catch((e) => {
+          postsEl.innerHTML = e.message
+        })
+
+      requete
+        .get('/comments')
+        .then((r) => {
+          logger(r)
+          commentsEl.innerHTML = output(r.data)
+        })
+        .catch((e) => {
+          commentsEl.innerHTML = e.message
+        })
+
+      requete
+        .get('/profiles')
+        .then((r) => {
+          logger(r)
+          profileEl.innerHTML = output(r.data)
+        })
+        .catch((e) => {
+          profileEl.innerHTML = e.message
+        })
+    </script>
+  </body>
+</html>

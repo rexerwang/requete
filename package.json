@@ -7,7 +7,7 @@
     "tsc:dts": "tsc -p tsconfig.build.json",
     "lint": "tsc --noEmit && eslint --cache --fix --ext .ts",
     "clean": "rimraf -rf ./dist ./temp",
-    "test": "vitest",
+    "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "serve": "json-server -c ./examples/mocks/json-server.json ./examples/mocks/db.json",
     "release": "release-it",
@@ -39,8 +39,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rexerwang/requete.git",
-    "directory": "packages/react"
+    "url": "https://github.com/rexerwang/requete.git"
   },
   "bugs": {
     "url": "https://github.com/rexerwang/requete/issues"
@@ -85,15 +84,11 @@
     "node": ">=18.15.0"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": [
+    "*.ts": [
       "eslint --fix",
       "prettier --write"
     ],
-    "*.css": [
-      "stylelint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
+    "*.{mjs,cjs,js,json,md,html}": [
       "prettier --write"
     ]
   },
@@ -102,7 +97,10 @@
   },
   "release-it": {
     "git": {
-      "commitMessage": "chore(release): v${version}"
+      "commitMessage": "chore(release): v${version}",
+      "tagName": "v${version}",
+      "tagAnnotation": "Release v${version}",
+      "requireBranch": "main"
     },
     "npm": {
       "publish": true,
@@ -110,7 +108,8 @@
       "ignoreVersion": false
     },
     "github": {
-      "release": true
+      "release": true,
+      "releaseName": "Release v${version}"
     },
     "plugins": {
       "@release-it/conventional-changelog": {
@@ -122,7 +121,7 @@
     "hooks": {
       "before:init": [
         "pnpm lint",
-        "pnpm test run"
+        "pnpm test"
       ],
       "after:bump": "pnpm build",
       "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."

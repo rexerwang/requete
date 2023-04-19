@@ -13,6 +13,7 @@ const includeFields = [
   'browser',
   'keywords',
   'author',
+  'license',
   'files',
   'repository',
   'bugs',

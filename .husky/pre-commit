@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx lint-staged
-npx vitest run --changed --passWithNoTests
+pnpm tsc --noEmit
+pnpm lint-staged
+pnpm vitest run --changed --passWithNoTests

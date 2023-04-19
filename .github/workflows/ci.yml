@@ -3,9 +3,17 @@ on:
   push:
     branches:
       - '**'
+    paths-ignore:
+      - 'README.md'
+      - 'examples/**'
+      - 'build/**'
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - 'README.md'
+      - 'examples/**'
+      - 'build/**'
 
 permissions:
   contents: read

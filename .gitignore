@@ -4,6 +4,8 @@ logs
 npm-debug.log*
 pnpm-debug.log*
 
+.npmrc
+
 node_modules
 dist
 coverage

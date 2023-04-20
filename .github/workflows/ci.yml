@@ -4,14 +4,14 @@ on:
     branches:
       - '**'
     paths-ignore:
-      - 'README.md'
+      - '*.md'
       - 'examples/**'
       - 'build/**'
   pull_request:
     branches:
-      - main
+      - '**'
     paths-ignore:
-      - 'README.md'
+      - '*.md'
       - 'examples/**'
       - 'build/**'
 

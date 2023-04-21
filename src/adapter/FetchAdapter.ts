@@ -36,7 +36,7 @@ export class FetchAdapter extends Adapter {
         headers.set('Content-Type', contentType)
       }
     }
-    if (init.body === undefined) {
+    if (init.body == null) {
       headers.delete('Content-Type')
     }
     init.headers = headers

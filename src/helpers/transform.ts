@@ -8,8 +8,8 @@ export function transformRequestBody(data?: RequestBody) {
 
   switch (toString) {
     case '[object Undefined]':
-      break
     case '[object Null]':
+      break
     case '[object String]':
     case '[object URLSearchParams]':
       contentType = 'application/x-www-form-urlencoded;charset=utf-8'

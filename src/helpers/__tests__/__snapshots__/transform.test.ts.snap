@@ -1,0 +1,66 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`transform specs > should transform requestBody correctly when given \`'1'\` 1`] = `
+{
+  "contentType": "application/x-www-form-urlencoded;charset=utf-8",
+  "requestBody": "1",
+}
+`;
+
+exports[`transform specs > should transform requestBody correctly when given \`{ a: 1 }\` 1`] = `
+{
+  "contentType": "application/json;charset=utf-8",
+  "requestBody": "{\\"a\\":1}",
+}
+`;
+
+exports[`transform specs > should transform requestBody correctly when given \`{ a: 1 }\` 2`] = `
+{
+  "contentType": "application/json;charset=utf-8",
+  "requestBody": "[{\\"a\\":1}]",
+}
+`;
+
+exports[`transform specs > should transform requestBody correctly when given \`ArrayBuffer { [Uint8Contents]: <00>, byteLength: 1 }\` 1`] = `
+{
+  "contentType": "multipart/form-data;charset=utf-8",
+  "requestBody": ArrayBuffer [],
+}
+`;
+
+exports[`transform specs > should transform requestBody correctly when given \`Blob { size: 1, type: '' }\` 1`] = `
+{
+  "contentType": "multipart/form-data;charset=utf-8",
+  "requestBody": Blob {
+    Symbol(kHandle): Blob {},
+    Symbol(kLength): 1,
+    Symbol(kType): "",
+  },
+}
+`;
+
+exports[`transform specs > should transform requestBody correctly when given \`FormData {
+  [Symbol(state)]: [ [length]: 0 ],
+  [Symbol(Symbol.toStringTag)]: 'FormData'
+}\` 1`] = `
+{
+  "contentType": "multipart/form-data;charset=utf-8",
+  "requestBody": FormData {
+    Symbol(state): [],
+  },
+}
+`;
+
+exports[`transform specs > should transform requestBody correctly when given \`null\` 1`] = `
+{
+  "contentType": "",
+  "requestBody": null,
+}
+`;
+
+exports[`transform specs > should transform requestBody correctly when given \`undefined\` 1`] = `
+{
+  "contentType": "",
+  "requestBody": undefined,
+}
+`;

@@ -54,7 +54,7 @@ export class XhrAdapter extends Adapter {
         headers.set('Content-Type', body.contentType)
       }
     }
-    if (requestBody === undefined) {
+    if (requestBody == null) {
       headers.delete('Content-Type')
     }
 
@@ -67,7 +67,7 @@ export class XhrAdapter extends Adapter {
   }
 
   private transformResponse(xhr: XMLHttpRequest, ctx: IContext) {
-    const headers = parseHeaders(xhr.getAllResponseHeaders())
+    const headers = parseHeaders(xhr?.getAllResponseHeaders())
 
     const response: IResponse = {
       ok: !!xhr.status && xhr.status >= 200 && xhr.status < 300,
@@ -105,30 +105,35 @@ export class XhrAdapter extends Adapter {
       let xhr: null | XMLHttpRequest = new XMLHttpRequest()
       xhr.open(ctx.request.method!, ctx.request.url, true)
 
+      const abort = (abortReq?: boolean) => {
+        reject(
+          new RequestError(ctx.request.abort!.signal.reason ?? 'aborted', ctx)
+        )
+
+        abortReq && xhr!.abort()
+        xhr = null
+      }
+
       const onabort = () => {
         if (!xhr) return
-
-        const reason = ctx.request.abort?.signal.reason ?? 'aborted'
-        reject(new RequestError(reason, ctx))
-        xhr.abort()
-        xhr = null
+        abort(true)
       }
 
       // add abortSignal
       if (ctx.request.abort) {
         const { signal } = ctx.request.abort
-        signal.aborted ? onabort() : signal.addEventListener('abort', onabort)
+        if (signal.aborted) {
+          // no need to send request
+          return abort()
+        }
+
+        signal.addEventListener('abort', onabort)
       }
 
       xhr.onloadend = () => {
         if (!xhr) return
 
-        try {
-          const res = this.transformResponse(xhr, ctx)
-          resolve(res)
-        } catch (error) {
-          reject(error)
-        }
+        resolve(this.transformResponse(xhr, ctx))
 
         ctx.request.abort?.signal.removeEventListener('abort', onabort)
         xhr = null
@@ -157,7 +162,7 @@ export class XhrAdapter extends Adapter {
       if (this.options?.onUploadProgress && xhr.upload) {
         xhr.addEventListener(
           'progress',
-          progressEventReducer(this.options.onUploadProgress, true)
+          progressEventReducer(this.options.onUploadProgress)
         )
       }
 

@@ -199,7 +199,7 @@ requete
   .use((ctx, next) =>
     next().then(() => {
       // throw a `RequestError` in somehow
-      if (!ctx.data.code === '<error_code>') {
+      if (!ctx.data.some_err_code === '<error_code>') {
         ctx.throw('Server Error')
       }
     })
@@ -348,16 +348,25 @@ class RequestError extends Error {
 
 ### Example
 
+If needed, you can import `RequestError` it from `requete`
+
 ```ts
 import { RequestError } from 'requete'
 
-// if needed
 throw new RequestError('<error message>', ctx)
 throw new RequestError(new Error('<error message>', ctx))
+```
 
+Throw `RequestError` in requete middleware
+
+```ts
 // in requete middleware
 ctx.throw('<error message>')
+```
 
+Caught `RequeteError` in request
+
+```ts
 // promise.catch
 requete.post('/api').catch((e) => {
   e.print() // formatted output
@@ -433,6 +442,21 @@ requete.get('/download-or-upload', {
 Additionally, `requete` also supports custom adapters by inheriting the `abstract class Adapter` and implementing the `request` method.
 
 ```ts
+interface IResponse<Data = any> {
+  headers: Headers
+  ok: boolean
+  redirected: boolean
+  status: number
+  statusText: string
+  type: ResponseType
+  url: string
+  data: Data
+  /** response body parser for Requete */
+  body(): Promise<Data>
+  /** response text when responseType is `json` or `text` */
+  responseText?: string
+}
+
 abstract class Adapter {
   abstract request<D>(ctx: IContext<D>): Promise<IResponse<D>>
 }

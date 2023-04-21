@@ -126,13 +126,6 @@ export class Requete {
           if (this.status !== -1)
             this.throw('Cannot set abortSignal after next().')
 
-          if (!TimeoutAbortController.supported)
-            this.throw(
-              new ReferenceError(
-                'Not support AbortController in current environment.'
-              )
-            )
-
           const abort = new TimeoutAbortController(this.request.timeout ?? 0)
           this.request.abort = abort
         }

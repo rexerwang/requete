@@ -4,7 +4,7 @@ import { FetchAdapter } from '../../adapter'
 import { RequestError } from '../RequestError'
 import { Requete } from '../Requete'
 
-describe('caught specs', () => {
+describe('Requete exceptions specs', () => {
   beforeEach(() => {
     vi.spyOn(FetchAdapter.prototype, 'request').mockImplementation(
       vi.fn().mockResolvedValue({
@@ -97,6 +97,8 @@ describe('caught specs', () => {
       await next()
     })
 
-    await expect(requete.get('/do-mock')).rejects.toThrow('abort request')
+    await expect(requete.get('/do-mock', { timeout: 1000 })).rejects.toThrow(
+      'abort request'
+    )
   })
 })

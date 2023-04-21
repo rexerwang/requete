@@ -2,7 +2,7 @@ import { toAny } from 'test/utils'
 
 import { Requete } from '../Requete'
 
-describe('response specs', () => {
+describe('Requete response specs', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })

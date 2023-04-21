@@ -1,7 +1,7 @@
 import { FetchAdapter } from '../../adapter'
 import { Requete } from '../Requete'
 
-describe('middleware specs', () => {
+describe('Requete middleware specs', () => {
   beforeEach(() => {
     vi.spyOn(FetchAdapter.prototype, 'request').mockImplementation(
       vi.fn().mockResolvedValue({

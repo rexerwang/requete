@@ -1,6 +1,6 @@
 {
   "name": "requete",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A lightweight client-side HTTP request library based on the Fetch API and supports middleware.",
   "scripts": {
     "build": "pnpm clean && pnpm tsc:dts && rollup -c",

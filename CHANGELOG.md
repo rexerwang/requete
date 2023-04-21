@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/rexerwang/requete/compare/v0.1.1...v0.1.2) (2023-04-21)
+
+### Bug Fixes
+
+- class XhrAdepter abort logic & progress event ([b371a26](https://github.com/rexerwang/requete/commit/b371a26faac7e69a955e233de6a7345afd5a8ce4))
+- transform body when nil ([9d87c66](https://github.com/rexerwang/requete/commit/9d87c66bd4ab99f71b0d45e772c3ea1297eb1840))
+
 ## [0.1.1](https://github.com/rexerwang/requete/compare/0.1.0...v0.1.1) (2023-04-20)
 
 ### Bug Fixes

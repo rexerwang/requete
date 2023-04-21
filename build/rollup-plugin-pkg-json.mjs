@@ -21,6 +21,7 @@ const includeFields = [
   'sideEffects',
   'peerDependencies',
   'dependencies',
+  'devDependencies',
   'engines',
   'publishConfig',
 ]

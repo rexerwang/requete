@@ -260,7 +260,7 @@ describe('XhrAdapter specs', () => {
     it.each([
       { responseType: 'blob', resIndex: 1 },
       { responseType: 'arrayBuffer', resIndex: 1 },
-      { responseType: 'formData', resIndex: 0 },
+      { responseType: 'formData', resIndex: 1 },
       { responseType: 'json', resIndex: 0 },
       { responseType: 'text', resIndex: 0 },
     ])(

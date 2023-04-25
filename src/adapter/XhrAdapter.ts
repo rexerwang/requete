@@ -74,17 +74,16 @@ export class XhrAdapter extends Adapter {
       status: xhr.status,
       statusText: xhr.statusText,
       headers,
-      redirected: false, // xhr not support redirect
-      type: 'default', // TODO: response type somehow ?
+      redirected: false,
+      type: 'default',
       url: xhr.responseURL,
       data: undefined,
       async body() {
         switch (ctx.request.responseType) {
           case 'blob':
           case 'arrayBuffer':
-            return xhr.response
           case 'formData':
-            return xhr.responseText // TODO: transform to formData
+            return xhr.response
           default:
             return xhr.responseText
         }

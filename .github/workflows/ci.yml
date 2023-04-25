@@ -49,4 +49,4 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install
       - name: Run lint
-        run: pnpm lint
+        run: pnpm run lint

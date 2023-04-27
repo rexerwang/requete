@@ -1,4 +1,4 @@
-import { Adapter, FetchAdapter, XhrAdapter } from '../adapter'
+import { Adapter, createAdapter } from '../adapter'
 import { getUri, mergeHeaders, pick } from '../helpers'
 import type {
   IContext,
@@ -29,11 +29,7 @@ export class Requete {
 
   constructor(config?: RequestConfig) {
     this.configs = Object.assign({ method: 'GET' }, Requete.defaults, config)
-
-    const SupportedAdapter = [FetchAdapter, XhrAdapter].find((i) => i.supported)
-    if (!SupportedAdapter)
-      throw new ReferenceError('No adapter supported in current environment.')
-    this.adapter = new SupportedAdapter()
+    this.adapter = createAdapter()
   }
 
   /**
@@ -137,12 +133,9 @@ export class Requete {
     return ctx
   }
 
-  private getAdapter(ctx: IContext) {
-    return ctx.request.adapter ?? this.adapter
-  }
-
   private async invoke(ctx: IContext) {
-    const response = await this.getAdapter(ctx).request(ctx)
+    const adapter = ctx.request.adapter ?? this.adapter
+    const response = await adapter.request(ctx)
 
     // assign to ctx
     Object.assign(

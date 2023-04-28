@@ -1,6 +1,20 @@
-import qs from 'query-string'
+import type { IRequest } from '../core/Requete'
 
-import { IRequest } from '../types'
+function stringifyUrl(target: string, query: string | Record<string, string>) {
+  const [url, qs] = target.split('?')
+  const searchParams = new URLSearchParams(qs)
+  if (typeof query === 'string') {
+    new URLSearchParams(query).forEach((value, key) => {
+      searchParams.set(key, value)
+    })
+  } else {
+    Object.entries(query).forEach(([key, value]) => {
+      searchParams.set(key, encodeURIComponent(value))
+    })
+  }
+
+  return url + '?' + searchParams.toString()
+}
 
 export function getUri(config: IRequest) {
   let url = config.url
@@ -10,11 +24,7 @@ export function getUri(config: IRequest) {
   }
 
   if (config.params) {
-    const query =
-      typeof config.params === 'string'
-        ? qs.parse(config.params)
-        : config.params
-    url = qs.stringifyUrl({ url, query })
+    url = stringifyUrl(url, config.params)
   }
 
   return url

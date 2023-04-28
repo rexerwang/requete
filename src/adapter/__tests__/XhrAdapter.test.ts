@@ -1,8 +1,8 @@
 import { sleep, toAny } from 'test/utils'
 
 import { TimeoutAbortController } from '../../core/AbortController'
+import { Method } from '../../core/Requete'
 import * as helpers from '../../helpers'
-import { Method } from '../../types'
 import { XhrAdapter } from '../XhrAdapter'
 
 describe('XhrAdapter specs', () => {

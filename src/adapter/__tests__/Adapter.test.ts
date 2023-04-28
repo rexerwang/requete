@@ -1,4 +1,6 @@
-import { createAdapter, FetchAdapter, XhrAdapter } from '..'
+import { createAdapter } from '../create'
+import { FetchAdapter } from '../FetchAdapter'
+import { XhrAdapter } from '../XhrAdapter'
 
 describe('createAdapter specs', () => {
   it('should thrown a ReferenceError when all adapters are not supported', () => {

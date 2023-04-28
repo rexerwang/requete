@@ -4,90 +4,134 @@ import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
-import dts from 'rollup-plugin-dts'
 
 import { copy, generatePackageJson, getBanner } from './build/index.mjs'
 import pkg from './package.json' assert { type: 'json' }
 
 const banner = getBanner(pkg)
+const commonPlugins = [
+  typescript({ exclude: 'src/**/*.{test,spec}.ts' }),
+  resolve(),
+]
 
 const dist = (file = '') => path.join('dist', file)
+const min = (file) => {
+  const ext = path.extname(file)
+  return file.slice(0, -ext.length) + '.min' + ext
+}
 
 const useBabel = () =>
-  babel({ babelHelpers: 'bundled', presets: ['@babel/preset-env'] })
+  babel({
+    babelHelpers: 'bundled',
+    presets: ['@babel/preset-env'],
+  })
 
-const withMinify = (config) => {
-  const min = (file) => {
-    const ext = path.extname(file)
-    return file.slice(0, -ext.length) + '.min' + ext
-  }
+const setupModuleConfig = (file, external, exports) => {
+  const module = pkg.exports[file === 'index' ? '.' : `./${file}`]
+  const input = `src/${file}.ts`
 
-  const { plugins, output } = config
+  return [
+    {
+      input,
+      external,
+      output: {
+        file: dist(module.import),
+        format: 'es',
+        generatedCode: { constBindings: true },
+        banner,
+      },
+      plugins: commonPlugins,
+    },
+    {
+      input,
+      external,
+      output: {
+        file: dist(module.require),
+        format: 'cjs',
+        esModule: false,
+        exports: 'named',
+        outro: exports
+          ? [
+              `module.exports = ${exports.default};`,
+              ...Object.entries(exports)
+                .filter(([key]) => key !== 'default')
+                .map(([key, value]) => `module.exports.${key} = ${value};`),
+              'exports.default = module.exports;',
+            ].join('\n')
+          : '',
+        generatedCode: { constBindings: true },
+        banner,
+      },
+      plugins: commonPlugins.concat(useBabel()),
+    },
+    // define declaration
+    ...(file === 'index'
+      ? [
+          {
+            input,
+            external,
+            output: {
+              dir: path.dirname(dist(pkg.types)),
+              format: 'es',
+              banner,
+            },
+            plugins: [
+              typescript({
+                rootDir: 'src',
+                exclude: ['**/*.{test,spec}.ts'],
+                declaration: true,
+                emitDeclarationOnly: true,
+                outDir: path.dirname(dist(pkg.types)),
+              }),
+              generatePackageJson({ src: pkg, dest: dist() }),
+              copy([
+                { src: 'LICENSE', dest: dist() },
+                { src: 'README.md', dest: dist() },
+                { src: '.npmignore', dest: dist() },
+              ]),
+            ],
+          },
+        ]
+      : []),
+  ]
+}
 
-  plugins.push(resolve(), useBabel())
+const setupUMDConfig = (config) => {
+  config.output.format = 'umd'
+  config.output.banner = banner
+  config.plugins = commonPlugins.concat(config.plugins ?? [], [useBabel()])
 
   return [
     config,
     {
       ...config,
-      plugins: [...plugins, terser()],
-      output: { ...output, file: min(output.file) },
+      plugins: [...config.plugins, terser()],
+      output: { ...config.output, file: min(config.output.file) },
     },
   ]
 }
 
-export default [
-  ...withMinify({
-    input: 'src/global.ts',
+export default [].concat(
+  setupModuleConfig('index', null, {
+    default: 'index',
+    RequestError: 'RequestError',
+    Requete: 'Requete',
+    TimeoutAbortController: 'TimeoutAbortController',
+    create: 'create',
+  }),
+  setupModuleConfig('middleware'),
+  setupModuleConfig('adapter'),
+  setupUMDConfig({
+    input: 'src/global.mjs',
     output: {
       name: pkg.name,
       file: dist(pkg.browser),
-      format: 'umd',
-      banner,
     },
-    plugins: [typescript()],
   }),
-  {
-    input: 'src/global.ts',
-    external: ['query-string'],
-    output: {
-      file: dist(pkg.main),
-      format: 'cjs',
-      generatedCode: { constBindings: true, objectShorthand: true },
-      banner,
-    },
-    plugins: [typescript()],
-  },
-  {
-    input: 'src/index.ts',
-    external: ['query-string'],
-    output: {
-      file: dist(pkg.module),
-      format: 'es',
-      generatedCode: { constBindings: true, objectShorthand: true },
-      banner,
-    },
-    plugins: [typescript()],
-  },
-  {
-    input: './temp/src/index.d.ts',
-    output: { file: dist(pkg.types), format: 'es', banner },
-    plugins: [
-      dts(),
-      generatePackageJson({ src: pkg, dest: dist() }),
-      copy([
-        { src: 'LICENSE', dest: dist() },
-        { src: 'README.md', dest: dist() },
-      ]),
-    ],
-  },
-  ...withMinify({
+  setupUMDConfig({
     input: 'src/polyfill.mjs',
     output: {
       file: dist(pkg.exports['./polyfill']),
-      format: 'umd',
-      banner,
     },
-    plugins: [],
-  }),
-]
+  })
+)

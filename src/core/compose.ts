@@ -1,4 +1,4 @@
-import type { Middleware } from '../types'
+export type Middleware<T> = (ctx: T, next: () => Promise<void>) => Promise<void>
 
 export function compose<T>(middlewares: Middleware<T>[]) {
   return (context: T, next: Middleware<T>) => {

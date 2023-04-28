@@ -3,10 +3,9 @@
   "version": "0.1.3",
   "description": "A lightweight client-side HTTP request library based on the Fetch API and supports middleware.",
   "scripts": {
-    "build": "pnpm clean && pnpm tsc:dts && rollup -c",
-    "tsc:dts": "tsc -p tsconfig.build.json",
+    "build": "pnpm clean && rollup -c",
     "lint": "tsc --noEmit && eslint --cache --fix --ext .ts",
-    "clean": "rimraf -rf ./dist ./temp",
+    "clean": "rimraf -rf ./dist",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "serve": "json-server -c ./examples/mocks/json-server.json ./examples/mocks/db.json",
@@ -14,19 +13,29 @@
     "postinstall": "husky install"
   },
   "type": "module",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "browser": "./dist/index.umd.js",
   "exports": {
     ".": {
-      "types": "dist/index.d.ts",
-      "import": "dist/index.mjs",
-      "require": "dist/index.cjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     },
-    "./polyfill": "dist/polyfill.js",
+    "./middleware": {
+      "types": "./dist/middleware.d.ts",
+      "import": "./dist/middleware.mjs",
+      "require": "./dist/middleware.cjs"
+    },
+    "./adapter": {
+      "types": "./dist/adapter.d.ts",
+      "import": "./dist/adapter.mjs",
+      "require": "./dist/adapter.cjs"
+    },
+    "./polyfill": "./dist/polyfill.umd.js",
     "./package.json": "./package.json"
   },
-  "types": "dist/index.d.ts",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "browser": "dist/index.umd.js",
   "keywords": [
     "http",
     "request",
@@ -46,9 +55,6 @@
   },
   "homepage": "https://github.com/rexerwang/requete#readme",
   "sideEffects": false,
-  "peerDependencies": {
-    "query-string": "^8.1.0"
-  },
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",
     "@commitlint/cli": "^17.6.1",
@@ -76,7 +82,6 @@
     "release-it": "^15.10.1",
     "rimraf": "^5.0.0",
     "rollup": "^3.20.4",
-    "rollup-plugin-dts": "^5.3.0",
     "typescript": "^5.0.4",
     "vitest": "^0.30.1"
   },

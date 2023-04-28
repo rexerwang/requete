@@ -1,5 +1,5 @@
+import type { IContext, IRequest, IResponse } from '../core/Requete'
 import { pick, transformRequestBody } from '../helpers'
-import type { IContext, IRequest, IResponse } from '../types'
 import { Adapter } from './Adapter'
 
 export class FetchAdapter extends Adapter {

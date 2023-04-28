@@ -102,7 +102,7 @@ describe('getUri specs', () => {
           params: { a: 1, b: 2 },
         })
       )
-    ).toBe('https://requete.com/api/v1/posts?a=1&b=2&c=3')
+    ).toBe('https://requete.com/api/v1/posts?c=3&a=1&b=2')
   })
 
   it('should overwrite origin url params when given same keys in params', () => {

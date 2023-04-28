@@ -1,4 +1,4 @@
-import type { IContext } from '../types'
+import type { IContext } from './Requete'
 
 export class RequestError extends Error {
   name = 'RequestError'
@@ -16,18 +16,5 @@ export class RequestError extends Error {
     }
 
     this.ctx = ctx
-  }
-
-  print() {
-    const { request, url, status, statusText } = this.ctx
-
-    console.error(
-      `${request.method} ${url} ${
-        status === -1 ? '[Before Request]' : `${status} (${statusText})`
-      }\n%o\n${this.stack}`,
-      this.ctx
-    )
-
-    return this
   }
 }

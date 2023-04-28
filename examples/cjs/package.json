@@ -1,0 +1,12 @@
+{
+  "name": "cjs",
+  "version": "1.0.0",
+  "description": "requete commonjs imports",
+  "main": "index.cjs",
+  "scripts": {
+    "test": "node index.cjs"
+  },
+  "dependencies": {
+    "requete": "file:../../dist"
+  }
+}

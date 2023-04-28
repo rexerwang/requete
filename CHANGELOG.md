@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.1](https://github.com/rexerwang/requete/compare/v1.0.0...v1.0.1) (2023-04-28)
+
+### Bug Fixes
+
+- exports field subdir stuct & remove `dist` nested dir ([08b9505](https://github.com/rexerwang/requete/commit/08b9505ec49f0dacf4fcdb21ebe1aa04d6a3db70))
+
 # [1.0.0](https://github.com/rexerwang/requete/compare/v0.1.1...v1.0.0) (2023-04-28)
 
 ### Bug Fixes

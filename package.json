@@ -123,6 +123,10 @@
         "infile": "CHANGELOG.md",
         "header": "# Changelog"
       }
+    },
+    "hooks": {
+      "after:bump": "pnpm build",
+      "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
     }
   },
   "commitlint": {

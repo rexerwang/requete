@@ -1,5 +1,28 @@
 # Changelog
 
+# [1.0.0](https://github.com/rexerwang/requete/compare/v0.1.1...v1.0.0) (2023-04-28)
+
+### Bug Fixes
+
+- class XhrAdepter abort logic & progress event ([b371a26](https://github.com/rexerwang/requete/commit/b371a26faac7e69a955e233de6a7345afd5a8ce4))
+- transform body when nil ([9d87c66](https://github.com/rexerwang/requete/commit/9d87c66bd4ab99f71b0d45e772c3ea1297eb1840))
+- **xhr:** formData type response ([86190cc](https://github.com/rexerwang/requete/commit/86190cc3f6abe0642b9c5a8b04e42f6231b97a63))
+
+- feat!: optimize exports & types ([dffb470](https://github.com/rexerwang/requete/commit/dffb4705bd6316a584875c4a28aa70709c9c4dd1))
+
+### Features
+
+- **adapter:** add `createAdapter` for choose the supported ([231b396](https://github.com/rexerwang/requete/commit/231b396db1fe09dd13efbefb0057d06281c4424a))
+
+### BREAKING CHANGES
+
+- optimize exports
+
+* exports `requete/adapter`
+* exports `requete/middleware`
+* add logger middleware
+* refactor typings
+
 ## [0.1.3](https://github.com/rexerwang/requete/compare/v0.1.1...v0.1.3) (2023-04-25)
 
 ### Bug Fixes

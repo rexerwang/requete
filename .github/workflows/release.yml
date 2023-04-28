@@ -30,8 +30,6 @@ jobs:
           node-version: 18
           cache: 'pnpm'
       - run: pnpm install
-      - name: Run build
-        run: pnpm run build
       - name: npm config
         run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
         env:

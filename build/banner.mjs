@@ -1,6 +1,6 @@
 export function getBanner(pkg) {
   const now = new Date()
-  const banner = `/*!
+  const banner = `/*
  * ${pkg.name} v${pkg.version}
  * Copyright ${now.getFullYear()} ${pkg.author}
  * Released under the ${pkg.license} license

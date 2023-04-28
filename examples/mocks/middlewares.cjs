@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const dist = (file) => path.join(__dirname, '../../dist/dist', file)
+const dist = (file) => path.join(__dirname, '../../dist', file)
 
 module.exports = (req, res, next) => {
   if (!/\/requete\/.+\.(js|mjs|cjs|ts|map)$/.test(req.url)) return next()
@@ -14,6 +14,9 @@ module.exports = (req, res, next) => {
   fs.createReadStream(file)
     .on('open', () => res.status(200).set('Content-Type', contentType))
     .on('end', () => res.end())
-    .on('error', (e) => res.status(404).send(e.message))
+    .on('error', (e) => {
+      console.error(e)
+      res.status(404).send(e.message)
+    })
     .pipe(res)
 }

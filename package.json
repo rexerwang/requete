@@ -13,27 +13,27 @@
     "postinstall": "husky install"
   },
   "type": "module",
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "browser": "./dist/index.umd.js",
+  "types": "./index.d.ts",
+  "main": "./index.cjs",
+  "module": "./index.mjs",
+  "browser": "./index.umd.js",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "require": "./index.cjs"
     },
     "./middleware": {
-      "types": "./dist/middleware.d.ts",
-      "import": "./dist/middleware.mjs",
-      "require": "./dist/middleware.cjs"
+      "types": "./middleware.d.ts",
+      "import": "./middleware.mjs",
+      "require": "./middleware.cjs"
     },
     "./adapter": {
-      "types": "./dist/adapter.d.ts",
-      "import": "./dist/adapter.mjs",
-      "require": "./dist/adapter.cjs"
+      "types": "./adapter.d.ts",
+      "import": "./adapter.mjs",
+      "require": "./adapter.cjs"
     },
-    "./polyfill": "./dist/polyfill.umd.js",
+    "./polyfill": "./polyfill.umd.js",
     "./package.json": "./package.json"
   },
   "keywords": [

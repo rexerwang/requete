@@ -1,13 +1,13 @@
 import { RequestError } from '../core/RequestError'
+import type { IContext, IResponse } from '../core/Requete'
 import {
   parseHeaders,
   progressEventReducer,
   transformRequestBody,
 } from '../helpers'
-import type { IContext, IResponse } from '../types'
 import { Adapter } from './Adapter'
 
-export interface IXhrProgressEvent {
+export interface IProgressEvent {
   loaded: number
   total?: number
   progress?: number
@@ -19,9 +19,9 @@ export interface IXhrProgressEvent {
   event?: any
 }
 
-type XhrAdapterOptions = {
-  onDownloadProgress?(e: IXhrProgressEvent): void
-  onUploadProgress?(e: IXhrProgressEvent): void
+export type XhrAdapterOptions = {
+  onDownloadProgress?(e: IProgressEvent): void
+  onUploadProgress?(e: IProgressEvent): void
 }
 
 export class XhrAdapter extends Adapter {

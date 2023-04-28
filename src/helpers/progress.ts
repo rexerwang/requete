@@ -1,4 +1,4 @@
-import type { IXhrProgressEvent } from '../adapter/XhrAdapter'
+import type { IProgressEvent } from '../adapter/XhrAdapter'
 
 /**
  * Calculate data maxRate
@@ -52,7 +52,7 @@ function speedometer(samplesCount = 10, min = 1000) {
  * Forked: https://github.com/axios/axios/blob/6f360a2531d8d70363fd9becef6a45a323f170e2/lib/adapters/xhr.js#L17
  */
 export function progressEventReducer(
-  listener: (e: IXhrProgressEvent) => void,
+  listener: (e: IProgressEvent) => void,
   isDownload?: boolean
 ) {
   let bytesNotified = 0

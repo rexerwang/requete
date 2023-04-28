@@ -7,7 +7,3 @@ export function createAdapter() {
     throw new ReferenceError('No adapter supported in current environment.')
   return new SupportedAdapter()
 }
-
-export * from './Adapter'
-export * from './FetchAdapter'
-export * from './XhrAdapter'

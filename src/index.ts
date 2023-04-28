@@ -1,14 +1,8 @@
-import { Requete } from './core/Requete'
-import type { RequestConfig } from './types'
-
-export * from './adapter'
-export * from './core/AbortController'
-export * from './core/RequestError'
-export * from './core/Requete'
-export * from './types'
-
-export function create(config?: RequestConfig) {
-  return new Requete(config)
-}
+import { create } from './core/create'
 
 export default create()
+
+export * from './core/AbortController'
+export * from './core/create'
+export * from './core/RequestError'
+export * from './core/Requete'

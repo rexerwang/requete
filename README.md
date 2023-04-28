@@ -47,6 +47,9 @@ npm i -S requete
 <script src="https://cdn.jsdelivr.net/npm/requete"></script>
 <!-- or using unpkg -->
 <script src="https://unpkg.com/requete"></script>
+
+<!-- minify js -->
+<script src="https://cdn.jsdelivr.net/npm/requete/index.umd.min.js"></script>
 ```
 
 ## Usage
@@ -204,6 +207,19 @@ requete
       }
     })
   )
+```
+
+### Builtin middleware
+
+`requete` also provides the following middleware for use:
+
+1. `logger`: used to output request logs. In general, its used at **last**.
+
+```ts
+import requete from 'requete'
+import { logger } from 'requete/middleware'
+
+requete.use(...).use(logger()) // requete.use(logger('<logger_name>'))
 ```
 
 ## Request Config
@@ -384,9 +400,9 @@ try {
 
 ## TimeoutAbortController
 
-`TimeoutAbortController` is used to auto-abort requests when timeout, and you can also call `abort()` to terminate them at any time. It is implemented based on [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
+it is used to auto-abort requests when timeout, and you can also call `abort()` to terminate them at any time. It is implemented based on [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
 
-In the requete configuration, you can add the `TimeoutAbortController` (or a regular `AbortController`) through the abort field.  
+In the requete configuration, you can add the `TimeoutAbortController` through the abort field.  
 It should be noted that if you set the timeout in the FetchAdapter and did not pass in abort, requete will add the `TimeoutAbortController` by default to achieve timeout termination.
 
 If the target browser does not support `AbortController`, please [add a polyfill](#polyfills) before using it.
@@ -427,13 +443,16 @@ requete.get('/download-large-thing', { timeout: 60000 })
 
 ## Request Adapter
 
-There are two request adapters in requete: `FetchAdapter` and `XhrAdapter`.
+There are two request adapters in requete: `FetchAdapter` and `XhrAdapter`.  
 If the current browser environment does not support the `FetchAdapter`, `XhrAdapter` will be used instead.
 
 Of course, you can also customize which adapter to use by declaring the `adapter` field in config.
 For example, when obtaining download or upload progress events, you can choose to use the `XhrAdapter`. (like [Axios](https://github.com/axios/axios#request-config))
 
-```js
+```ts
+import requete from 'requete'
+import { XhrAdapter } from 'requete/adapter'
+
 requete.get('/download-or-upload', {
   adapter: new XhrAdapter({ onDownloadProgress(e) {}, onUploadProgress(e) {} }),
 })
@@ -467,7 +486,7 @@ abstract class Adapter {
 ```ts
 // CustomAdapter.ts
 
-import { Adapter } from 'requete'
+import { Adapter } from 'requete/adapter'
 
 export class CustomAdapter extends Adapter {
   async request(ctx: IContext) {
@@ -497,7 +516,7 @@ import 'requete/polyfill'
 
 ```html
 <!-- using jsdelivr -->
-<script src="https://cdn.jsdelivr.net/npm/requete/dist/polyfill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/requete/polyfill.umd.min.js"></script>
 <!-- using unpkg -->
-<script src="https://unpkg.com/requete/dist/polyfill.min.js"></script>
+<script src="https://unpkg.com/requete/polyfill.umd.min.js"></script>
 ```

@@ -1,5 +1,5 @@
 import type { RequestError } from '../core/RequestError'
-import type { RequestMiddleware } from '../core/Requete'
+import type { Middleware } from '../core/Requete'
 
 class Logger {
   constructor(private name: string) {}
@@ -15,25 +15,22 @@ class Logger {
       this.name,
       `${request.method} ${url} ${status} (${
         status === -1 ? 'Before Request' : statusText
-      })\n%o\n${e.stack}`,
-      e.ctx
+      })\n${e.ctx}\n${e.stack}`
     )
   }
 }
 
-export function logger(name = 'Requete'): RequestMiddleware {
+export function logger(name = 'Requete'): Middleware {
   const logger = new Logger(`[${name}]`)
 
   return async (ctx, next) => {
-    logger.info(`${ctx.request.method} ${ctx.url}`, {
-      data: ctx.request.data,
-      headers: ctx.request.headers,
-    })
+    logger.info(`${ctx.request.method} ${ctx.url}`, ctx)
 
     try {
       await next()
       logger.info(
-        `${ctx.request.method} ${ctx.url} ${ctx.status} (${ctx.statusText})`
+        `${ctx.request.method} ${ctx.url} ${ctx.status} (${ctx.statusText})`,
+        ctx
       )
     } catch (error) {
       logger.error(error as RequestError)

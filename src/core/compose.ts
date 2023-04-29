@@ -1,10 +1,10 @@
-export type Middleware<T> = (ctx: T, next: () => Promise<void>) => Promise<void>
+import type { IContext, Middleware } from './Requete'
 
-export function compose<T>(middlewares: Middleware<T>[]) {
-  return (context: T, next: Middleware<T>) => {
+export function compose(middlewares: Middleware[]) {
+  return (context: IContext, next: Middleware) => {
     // last called middleware #
     let index = -1
-    return dispatch(0)
+    return dispatch(0).catch((e) => context.throw(e))
     async function dispatch(i: number): Promise<void> {
       if (i <= index) throw new Error('next() called multiple times')
 

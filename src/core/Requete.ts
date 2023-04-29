@@ -1,7 +1,7 @@
 import { Adapter, createAdapter } from '../adapter'
 import { getUri, mergeHeaders, pick } from '../helpers'
 import { TimeoutAbortController } from './AbortController'
-import { compose, Middleware } from './compose'
+import { compose } from './compose'
 import { RequestError } from './RequestError'
 
 export type Method =
@@ -124,7 +124,10 @@ export interface IContext<Data = any> extends IResponse<Data> {
   abort(): TimeoutAbortController
 }
 
-export type RequestMiddleware = Middleware<IContext>
+export type Middleware = (
+  ctx: IContext,
+  next: () => Promise<void>
+) => Promise<void>
 
 type AliasConfig = Omit<IRequest, 'url' | 'data'>
 
@@ -135,12 +138,14 @@ export class Requete {
     headers: {
       Accept: 'application/json, text/plain, */*',
     },
-    toJSON: JSON.parse,
+    toJSON: (text: string | null | undefined) => {
+      if (text) return JSON.parse(text)
+    },
   }
 
   private configs?: RequestConfig
   private adapter: Adapter
-  private middlewares: RequestMiddleware[] = []
+  private middlewares: Middleware[] = []
 
   constructor(config?: RequestConfig) {
     this.configs = Object.assign({ method: 'GET' }, Requete.defaults, config)
@@ -175,7 +180,7 @@ export class Requete {
    *
    * ```
    */
-  use(middleware: RequestMiddleware) {
+  use(middleware: Middleware) {
     this.middlewares.push(middleware)
     return this
   }
@@ -230,6 +235,7 @@ export class Requete {
         return this
       },
       throw(e) {
+        if (e instanceof RequestError) throw e
         throw new RequestError(e, this)
       },
       abort() {
@@ -271,7 +277,7 @@ export class Requete {
     const data = await response.body()
     switch (ctx.request.responseType) {
       case 'json':
-        ctx.data = ctx.request.toJSON?.(data)
+        ctx.data = ctx.request.toJSON!(data)
         ctx.responseText = data
         break
       case 'text':
@@ -283,9 +289,8 @@ export class Requete {
     }
 
     if (!ctx.ok) {
-      throw new RequestError(
-        `${ctx.request.method} ${ctx.url} ${ctx.status} (${ctx.statusText})`,
-        ctx
+      ctx.throw(
+        `${ctx.request.method} ${ctx.url} ${ctx.status} (${ctx.statusText})`
       )
     }
   }
@@ -298,8 +303,6 @@ export class Requete {
     try {
       await compose(this.middlewares)(context, this.invoke.bind(this))
       return context
-    } catch (e: any) {
-      throw e.name === 'RequestError' ? e : new RequestError(e, context)
     } finally {
       context.request.abort?.clear()
     }

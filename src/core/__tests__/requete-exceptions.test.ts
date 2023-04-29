@@ -43,12 +43,14 @@ describe('Requete exceptions specs', () => {
 
   it('should caught RequestError when middleware throws', async () => {
     const requete = new Requete().use(async (ctx, next) => {
-      if (ctx.request.method === 'GET') ctx.throw('not allowed')
+      if (ctx.request.method === 'GET') throw new Error('not allowed')
       await next()
-      if (ctx.request.method === 'POST') ctx.throw('post error')
+      if (ctx.request.method === 'POST') throw new Error('post error')
     })
 
+    await expect(requete.get('/do-mock')).rejects.toThrow(RequestError)
     await expect(requete.get('/do-mock')).rejects.toThrow('not allowed')
+    await expect(requete.post('/do-mock')).rejects.toThrow(RequestError)
     await expect(requete.post('/do-mock')).rejects.toThrow('post error')
   })
 
@@ -100,5 +102,21 @@ describe('Requete exceptions specs', () => {
     await expect(requete.get('/do-mock', { timeout: 1000 })).rejects.toThrow(
       'abort request'
     )
+  })
+
+  it('should caught RequestError when parse body with throws', async () => {
+    vi.spyOn(FetchAdapter.prototype, 'request').mockImplementation(
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        url: '/do-mock',
+        body: () => Promise.resolve('bad'),
+      })
+    )
+
+    const requete = new Requete()
+    await expect(requete.get('/do-mock')).rejects.toThrow(RequestError)
+    await expect(requete.get('/do-mock')).rejects.toThrow(/Unexpected token/)
   })
 })

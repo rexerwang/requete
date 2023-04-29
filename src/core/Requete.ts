@@ -59,7 +59,7 @@ export interface IRequest extends RequestConfig {
    */
   method?: Method
   /** A string or object to set querystring of url */
-  params?: string | Record<string, string>
+  params?: string | Record<string, string | number | boolean>
   /** request`s body */
   data?: RequestBody
   /**

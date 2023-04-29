@@ -1,0 +1,15 @@
+lockfileVersion: '6.0'
+
+dependencies:
+  requete:
+    specifier: file:../../dist
+    version: file:../../dist
+
+packages:
+
+  file:../../dist:
+    resolution: {directory: ../../dist, type: directory}
+    name: requete
+    version: 1.0.2
+    engines: {node: '>=18'}
+    dev: false

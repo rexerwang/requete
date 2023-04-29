@@ -9,7 +9,7 @@ describe('Requete request configs', () => {
         status: 200,
         statusText: 'OK',
         url: '/do-mock',
-        body: () => Promise.resolve('null'),
+        data: 'null',
       })
     )
   })

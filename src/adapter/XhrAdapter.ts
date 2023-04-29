@@ -67,27 +67,18 @@ export class XhrAdapter extends Adapter {
   }
 
   private transformResponse(xhr: XMLHttpRequest, ctx: IContext) {
-    const headers = parseHeaders(xhr?.getAllResponseHeaders())
-
     const response: IResponse = {
       ok: !!xhr.status && xhr.status >= 200 && xhr.status < 300,
       status: xhr.status,
       statusText: xhr.statusText,
-      headers,
+      headers: parseHeaders(xhr.getAllResponseHeaders()),
       redirected: false,
       type: 'default',
       url: xhr.responseURL,
-      data: undefined,
-      async body() {
-        switch (ctx.request.responseType) {
-          case 'blob':
-          case 'arrayBuffer':
-          case 'formData':
-            return xhr.response
-          default:
-            return xhr.responseText
-        }
-      },
+      data: ['json', 'text', undefined].includes(ctx.request.responseType)
+        ? xhr.responseText
+        : xhr.response,
+      responseText: xhr.responseText,
     }
 
     return response

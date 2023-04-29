@@ -13,9 +13,11 @@ It provides APIs similar to `Axios`.
 
 In addition, **requete** also includes an `XMLHttpRequest` adapter, which allows it to be used in older browsers that do not support `Fetch`, and provides polyfills to simplify import.
 
+Also, `requete` supports usage in `Node.js`, using `fetch` API (`nodejs >= 17.5.0`).
+
 ## Features
 
-- Use `Fetch API` on modern browsers
+- Use `Fetch API` on modern browsers or Node.js
 - Use `XMLHttpRequest` on older browsers
 - Supports `middleware` for handling request and response
 - Supports the Promise API
@@ -90,7 +92,7 @@ import { Requete } from 'requete'
 const requete = new Requete()
 ```
 
-For commonjs/AMD module, `require` it:
+For commonjs module, `require` it:
 
 ```js
 const requete = require('requete')
@@ -209,7 +211,7 @@ requete
   )
 ```
 
-### Builtin middleware
+#### Builtin middleware
 
 `requete` also provides the following middleware for use:
 
@@ -402,8 +404,8 @@ try {
 
 it is used to auto-abort requests when timeout, and you can also call `abort()` to terminate them at any time. It is implemented based on [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
 
-In the requete configuration, you can add the `TimeoutAbortController` through the abort field.  
-It should be noted that if you set the timeout in the FetchAdapter and did not pass in abort, requete will add the `TimeoutAbortController` by default to achieve timeout termination.
+In the requete configuration, you can add the `TimeoutAbortController` through the `abort` field.  
+It should be noted that if you set the `timeout` field in config and unset the `abort` field, `requete` will add the `TimeoutAbortController` by default to achieve timeout termination.
 
 If the target browser does not support `AbortController`, please [add a polyfill](#polyfills) before using it.
 
@@ -429,25 +431,27 @@ class TimeoutAbortController {
 ```ts
 import { TimeoutAbortController } from 'requete'
 
-// set 60s timeout
+/** 1. by `abort` config */
 const controller = new TimeoutAbortController(60000)
 requete.get('/download-large-thing', { abort: controller }).catch((e) => {
   e.print() // "canceled"
 })
-// you can abort request if needed
+// you can abort request
 controller.abort('canceled')
 
-// or timeout config
+/** 2. by `timeout` config */
 requete.get('/download-large-thing', { timeout: 60000 })
 ```
 
 ## Request Adapter
 
-There are two request adapters in requete: `FetchAdapter` and `XhrAdapter`.  
-If the current browser environment does not support the `FetchAdapter`, `XhrAdapter` will be used instead.
+There are two request adapters in requete: `FetchAdapter`, `XhrAdapter`.
+
+- **In Browser:** using `FetchAdapter` as default, and `XhrAdapter` is used as a fallback.
+- **In Node.js:** using `FetchAdapter`.
 
 Of course, you can also customize which adapter to use by declaring the `adapter` field in config.
-For example, when obtaining download or upload progress events, you can choose to use the `XhrAdapter`. (like [Axios](https://github.com/axios/axios#request-config))
+For example, in browser environment, when obtaining download or upload progress events, you can choose to use the `XhrAdapter`. (like [Axios](https://github.com/axios/axios#request-config))
 
 ```ts
 import requete from 'requete'

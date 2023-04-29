@@ -1,8 +1,8 @@
 import type { IRequest } from '../core/Requete'
 
-function stringifyUrl(target: string, query: string | Record<string, string>) {
-  const [url, qs] = target.split('?')
-  const searchParams = new URLSearchParams(qs)
+function stringifyUrl(target: string, query: NonNullable<IRequest['params']>) {
+  const [url, search] = target.split('?')
+  const searchParams = new URLSearchParams(search)
   if (typeof query === 'string') {
     new URLSearchParams(query).forEach((value, key) => {
       searchParams.set(key, value)

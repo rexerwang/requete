@@ -1,4 +1,5 @@
 import { FetchAdapter } from '../../adapter'
+import { RequestError } from '../RequestError'
 import { Requete } from '../Requete'
 
 describe('Requete middleware specs', () => {
@@ -78,5 +79,17 @@ describe('Requete middleware specs', () => {
 
     const res = await requete.post('/do-mock', undefined)
     expect(res.request.abort).toEqual(controller)
+  })
+
+  it('should throws when call next() duplicated', async () => {
+    const requete = new Requete()
+    requete.use(async (ctx, next) => {
+      await next()
+      await next()
+    })
+
+    await expect(requete.post('/do-mock')).rejects.toThrow(
+      'next() called multiple times'
+    )
   })
 })

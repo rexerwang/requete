@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/rexerwang/requete/compare/v1.0.1...v1.0.2) (2023-04-29)
+
+### Bug Fixes
+
+- stringifyUrl query typings ([76d03e8](https://github.com/rexerwang/requete/commit/76d03e87678768471054b8b68b96ee31cafaffe3))
+- unified error type to RequestError & logger output ([8403ec7](https://github.com/rexerwang/requete/commit/8403ec7ee423881927c21cff80f0a18644579b3b))
+
 ## [1.0.1](https://github.com/rexerwang/requete/compare/v1.0.0...v1.0.1) (2023-04-28)
 
 ### Bug Fixes

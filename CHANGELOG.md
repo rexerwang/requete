@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.3](https://github.com/rexerwang/requete/compare/v1.0.2...v1.0.3) (2023-04-29)
+
+### Bug Fixes
+
+- **middleware:** format logger output ([83e916a](https://github.com/rexerwang/requete/commit/83e916a903da13636a859aef033e5f747fc334da))
+
 ## [1.0.2](https://github.com/rexerwang/requete/compare/v1.0.1...v1.0.2) (2023-04-29)
 
 ### Bug Fixes

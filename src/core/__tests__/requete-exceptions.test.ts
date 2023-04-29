@@ -12,7 +12,7 @@ describe('Requete exceptions specs', () => {
         status: 200,
         statusText: 'OK',
         url: '/do-mock',
-        body: () => Promise.resolve('null'),
+        data: 'null',
       })
     )
 
@@ -27,7 +27,7 @@ describe('Requete exceptions specs', () => {
         status: 500,
         statusText: 'Internal Server Error',
         url: '/do-mock',
-        body: () => Promise.resolve('null'),
+        data: 'null',
       })
     )
 
@@ -89,7 +89,7 @@ describe('Requete exceptions specs', () => {
           status: 500,
           statusText: 'Internal Server Error',
           url: '/do-mock',
-          body: () => Promise.resolve('null'),
+          data: 'null',
         })
       }
     )
@@ -111,7 +111,7 @@ describe('Requete exceptions specs', () => {
         status: 200,
         statusText: 'OK',
         url: '/do-mock',
-        body: () => Promise.resolve('bad'),
+        data: 'bad',
       })
     )
 

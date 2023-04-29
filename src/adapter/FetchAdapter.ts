@@ -66,17 +66,18 @@ export class FetchAdapter extends Adapter {
       'url',
     ]) as IResponse
 
-    res.body = async () => {
-      switch (ctx.request.responseType) {
-        case 'formData':
-          return await response.formData()
-        case 'blob':
-          return await response.blob()
-        case 'arrayBuffer':
-          return await response.arrayBuffer()
-        default:
-          return await response.text()
-      }
+    switch (ctx.request.responseType) {
+      case 'formData':
+        res.data = await response.formData()
+        break
+      case 'blob':
+        res.data = await response.blob()
+        break
+      case 'arrayBuffer':
+        res.data = await response.arrayBuffer()
+        break
+      default:
+        res.data = res.responseText = await response.text()
     }
 
     return res

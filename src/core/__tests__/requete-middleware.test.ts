@@ -1,5 +1,4 @@
 import { FetchAdapter } from '../../adapter'
-import { RequestError } from '../RequestError'
 import { Requete } from '../Requete'
 
 describe('Requete middleware specs', () => {
@@ -10,7 +9,7 @@ describe('Requete middleware specs', () => {
         status: 200,
         statusText: 'OK',
         url: '/do-mock',
-        body: () => Promise.resolve('null'),
+        data: 'null',
       })
     )
   })

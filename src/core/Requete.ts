@@ -83,9 +83,6 @@ export interface IResponse<Data = any> {
   type: ResponseType
   url: string
   data: Data
-  /** response body parser. **For Internal Only** */
-  body(): Promise<Data>
-  /** response text when responseType is `json` or `text` */
   responseText?: string
 }
 
@@ -209,7 +206,6 @@ export class Requete {
       request,
       status: -1,
       data: undefined as D,
-      body: () => Promise.reject(),
       ok: false,
       redirected: false,
       headers: undefined as unknown as Headers,
@@ -267,25 +263,15 @@ export class Requete {
         'statusText',
         'headers',
         'data',
-        'body',
+        'responseText',
         'redirected',
         'type',
         'url',
       ])
     )
 
-    const data = await response.body()
-    switch (ctx.request.responseType) {
-      case 'json':
-        ctx.data = ctx.request.toJSON!(data)
-        ctx.responseText = data
-        break
-      case 'text':
-        ctx.data = ctx.responseText = data
-        break
-      default:
-        ctx.data = data
-        break
+    if (ctx.request.responseType === 'json') {
+      ctx.data = ctx.request.toJSON!(response.data)
     }
 
     if (!ctx.ok) {

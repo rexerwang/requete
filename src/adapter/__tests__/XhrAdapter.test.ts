@@ -196,7 +196,7 @@ describe('XhrAdapter specs', () => {
         return new FakeXhr() as any
       })
 
-      const { body, ...response } = await new XhrAdapter().request(
+      const response = await new XhrAdapter().request(
         toAny({
           request: {
             url: '/do-mock',
@@ -207,7 +207,6 @@ describe('XhrAdapter specs', () => {
         })
       )
 
-      expect(body).toBeDefined()
       expect(response).toEqual({
         ok: false,
         status: undefined,
@@ -284,7 +283,7 @@ describe('XhrAdapter specs', () => {
           return new FakeXhr() as any
         })
 
-        const { body } = await new XhrAdapter().request(
+        const { data } = await new XhrAdapter().request(
           toAny({
             request: {
               url: '/do-mock',
@@ -295,7 +294,7 @@ describe('XhrAdapter specs', () => {
           })
         )
 
-        expect(await body()).toBe(mockRes[resIndex])
+        expect(data).toBe(mockRes[resIndex])
       }
     )
   })

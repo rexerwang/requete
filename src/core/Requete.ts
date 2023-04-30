@@ -1,5 +1,5 @@
 import { Adapter, createAdapter } from '../adapter'
-import { getUri, mergeHeaders, pick } from '../helpers'
+import { getUri, Logger, mergeHeaders, pick } from '../helpers'
 import { TimeoutAbortController } from './AbortController'
 import { compose } from './compose'
 import { RequestError } from './RequestError'
@@ -43,6 +43,8 @@ export interface RequestConfig {
   referrer?: string
   /** A referrer policy to set request's referrerPolicy. */
   referrerPolicy?: ReferrerPolicy
+  /** enable logger or set logger level # */
+  verbose?: boolean | number
   /**
    * parse json function
    * (for transform response)
@@ -51,7 +53,7 @@ export interface RequestConfig {
   toJSON?(body: string): any
 }
 
-export interface IRequest extends RequestConfig {
+export interface IRequest extends Omit<RequestConfig, 'verbose'> {
   url: string
   /**
    * A string to set request's method.
@@ -143,10 +145,16 @@ export class Requete {
   private configs?: RequestConfig
   private adapter: Adapter
   private middlewares: Middleware[] = []
+  private logger: Logger
 
   constructor(config?: RequestConfig) {
     this.configs = Object.assign({ method: 'GET' }, Requete.defaults, config)
     this.adapter = createAdapter()
+
+    this.logger = new Logger(
+      'Requete',
+      this.configs.verbose === true ? 2 : Number(this.configs.verbose ?? 0)
+    )
   }
 
   /**
@@ -271,12 +279,6 @@ export class Requete {
     if (ctx.request.responseType === 'json') {
       ctx.data = ctx.request.toJSON!(response.data)
     }
-
-    if (!ctx.ok) {
-      ctx.throw(
-        `${ctx.request.method} ${ctx.url} ${ctx.status} (${ctx.statusText})`
-      )
-    }
   }
 
   async request<D = any>(config: IRequest) {
@@ -285,8 +287,21 @@ export class Requete {
 
     // exec middleware
     try {
+      this.logger.info(`Use ${this.middlewares.length} middleware`)
+      this.logger.request(context)
       await compose(this.middlewares)(context, this.invoke.bind(this))
+
+      if (!context.ok) {
+        context.throw(
+          `${context.request.method} ${context.url} ${context.status} (${context.statusText})`
+        )
+      }
+
+      this.logger.response(context)
       return context
+    } catch (e: any) {
+      this.logger.error(e)
+      throw e
     } finally {
       context.request.abort?.clear()
     }

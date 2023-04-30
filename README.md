@@ -77,7 +77,7 @@ requete
   .get<IPost>('/posts')
   .then((r) => r.data)
   .catch((error) => {
-    error.print() // error as `RequestError`
+    console.log(error) // error as `RequestError`
   })
 ```
 
@@ -164,6 +164,7 @@ requete.put('/users/profile/123', { name: 'Jay Chou' })
 
 - The calling order of middleware should follow the **Onion Model**.
   like [`Koa middleware`](https://github.com/koajs/koa/blob/master/docs/guide.md#writing-middleware).
+- **Throwing an exception in middleware will break the middleware execution chain.**
 - `next()` must be called asynchronously in middleware
 - `ctx` is the requete context object, type `IContext`. more information in [here](#response-typings).
 
@@ -185,13 +186,13 @@ requete
         authenticate()
       }
 
-      // continue to throws
+      // continue to throws, and will break the subsequent execution
       throw e
     }
   })
   .use((ctx, next) =>
     next().then(() => {
-      // throw a `RequestError` in somehow
+      // throw a `RequestError` and break the subsequent execution
       if (!ctx.data.some_err_code === '<error_code>') {
         ctx.throw('Server Error')
       }
@@ -203,13 +204,14 @@ requete
 
 `requete` also provides the following middleware for use:
 
-1. `logger`: used to output request logs. In general, its used at **last**.
+1. ~~`logger`: used to output request logs. In general, its used at **last**.~~
 
 ```ts
 import requete from 'requete'
 import { logger } from 'requete/middleware'
 
-requete.use(...).use(logger()) // requete.use(logger('<logger_name>'))
+/** @deprecated Use `config.verbose` instead */
+requete.use(logger())
 ```
 
 ## Request Config
@@ -241,6 +243,8 @@ interface RequestConfig {
   referrer?: string
   /** A referrer policy to set request's referrerPolicy. */
   referrerPolicy?: ReferrerPolicy
+  /** enable logger or set logger level # */
+  verbose?: boolean | number
   /**
    * parse json function
    * (for transform response)
@@ -250,7 +254,13 @@ interface RequestConfig {
 }
 ```
 
-2. Config for request methods. (`requete.request(config?: IRequest)`)
+`config.verbose` is used to toggle the logger output (instead of logger middleware).
+
+- set `true` or `2`: output `info` and `error` level
+- set `1`: output `error` level
+- set `false` or `0` or not set: no output
+
+1. Config for request methods. (`requete.request(config?: IRequest)`)
 
 ```ts
 interface IRequest extends RequestConfig {

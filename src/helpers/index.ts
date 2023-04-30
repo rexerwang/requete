@@ -1,5 +1,6 @@
 export * from './getUri'
 export * from './headers'
+export * from './logger'
 export * from './pick'
 export * from './progress'
 export * from './transform'

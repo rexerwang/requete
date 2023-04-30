@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/rexerwang/requete/compare/v1.0.3...v1.0.4) (2023-04-30)
+
+### Bug Fixes
+
+- regex for absolute url ([f3d87cc](https://github.com/rexerwang/requete/commit/f3d87cc17b619c0b5eaa6d9cd91c1301f55e1850))
+- transform response in adapters ([c59dd4e](https://github.com/rexerwang/requete/commit/c59dd4e0b9fbf637d3ada2a62dc53936c95e515d))
+
 ## [1.0.3](https://github.com/rexerwang/requete/compare/v1.0.2...v1.0.3) (2023-04-29)
 
 ### Bug Fixes

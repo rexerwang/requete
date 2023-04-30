@@ -12,6 +12,15 @@ describe('getUri specs', () => {
         })
       )
     ).toBe('https://api.com/api/v1/posts')
+
+    expect(
+      getUri(
+        toAny({
+          baseURL: 'https://requete.com',
+          url: '//api.com/api/v1/posts',
+        })
+      )
+    ).toBe('//api.com/api/v1/posts')
   })
 
   it('should not join when baseURL is falsy', () => {
@@ -47,17 +56,8 @@ describe('getUri specs', () => {
     expect(
       getUri(
         toAny({
-          baseURL: 'https://requete.com/',
-          url: '//api/v1/posts/',
-        })
-      )
-    ).toBe('https://requete.com/api/v1/posts/')
-
-    expect(
-      getUri(
-        toAny({
           baseURL: 'https://requete.com//',
-          url: '//api/v1/posts/',
+          url: '/api/v1/posts/',
         })
       )
     ).toBe('https://requete.com/api/v1/posts/')

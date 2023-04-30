@@ -16,10 +16,14 @@ function stringifyUrl(target: string, query: NonNullable<IRequest['params']>) {
   return url + '?' + searchParams.toString()
 }
 
+function isAbsolute(url: string) {
+  return /^([a-z][a-z\d+\-.]*:)?\/\//i.test(url)
+}
+
 export function getUri(config: IRequest) {
   let url = config.url
 
-  if (!url.includes('://') && config.baseURL) {
+  if (!isAbsolute(url) && config.baseURL) {
     url = config.baseURL.replace(/\/+$/, '') + '/' + url.replace(/^\/+/, '')
   }
 

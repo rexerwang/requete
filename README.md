@@ -46,12 +46,9 @@ npm i -S requete
 
 ```html
 <!-- using jsdelivr -->
-<script src="https://cdn.jsdelivr.net/npm/requete"></script>
-<!-- or using unpkg -->
-<script src="https://unpkg.com/requete"></script>
-
-<!-- minify js -->
 <script src="https://cdn.jsdelivr.net/npm/requete/index.umd.min.js"></script>
+<!-- or using unpkg -->
+<script src="https://unpkg.com/requete/index.umd.min.js"></script>
 ```
 
 ## Usage
@@ -84,14 +81,6 @@ requete
   })
 ```
 
-Similarly, you can also use `Requete` class:
-
-```ts
-import { Requete } from 'requete'
-
-const requete = new Requete()
-```
-
 For commonjs module, `require` it:
 
 ```js
@@ -102,9 +91,6 @@ requete.get('https://your-api.com/api/posts')
 
 // create new instance
 const http = requete.create({ baseURL: 'https://your-api.com/api' })
-// or new class
-// const http = requete.Requete()
-
 // Make a POST request
 http.post('posts', { id: 1 })
 ```
@@ -120,8 +106,6 @@ For browser:
 
   // create new instance
   const http = requete.create()
-  // or new class
-  // const http = requete.Requete()
 </script>
 ```
 
@@ -168,6 +152,10 @@ requete.request({
   method: 'POST'
   data: { id: '123', name: 'Jay Chou' },
 })
+
+requete.delete('/users/profile/123')
+
+requete.put('/users/profile/123', { name: 'Jay Chou' })
 ```
 
 ### Use Middleware
@@ -320,9 +308,7 @@ interface IContext<Data = any> {
   statusText: string
   type: ResponseType
   url: string
-  /** parsed response data */
   data: Data
-  /** response text when responseType is `json` or `text` */
   responseText?: string
 
   /**
@@ -359,8 +345,6 @@ class RequestError extends Error {
   ctx: IContext
 
   constructor(errMsg: string | Error, ctx: IContext)
-
-  print(): this
 }
 ```
 
@@ -372,7 +356,7 @@ If needed, you can import `RequestError` it from `requete`
 import { RequestError } from 'requete'
 
 throw new RequestError('<error message>', ctx)
-throw new RequestError(new Error('<error message>', ctx))
+throw new RequestError(new Error('<error message>'), ctx)
 ```
 
 Throw `RequestError` in requete middleware
@@ -387,9 +371,9 @@ Caught `RequeteError` in request
 ```ts
 // promise.catch
 requete.post('/api').catch((e) => {
-  e.print() // formatted output
-  console.log(e.status) // response status
-  console.log(e.headers) // response header
+  console.log(e.name) // "RequestError"
+  console.log(e.ctx.status) // response status
+  console.log(e.ctx.headers) // response header
 })
 
 // try-catch
@@ -397,6 +381,8 @@ try {
   await requete.post('/api')
 } catch (e) {
   console.log(e.name) // "RequestError"
+  console.log(e.ctx.status) // response status
+  console.log(e.ctx.headers) // response header
 }
 ```
 
@@ -433,14 +419,14 @@ import { TimeoutAbortController } from 'requete'
 
 /** 1. by `abort` config */
 const controller = new TimeoutAbortController(60000)
-requete.get('/download-large-thing', { abort: controller }).catch((e) => {
-  e.print() // "canceled"
+requete.get('/fetch-large-thing', { abort: controller }).catch((e) => {
+  console.error(e) // "canceled"
 })
 // you can abort request
 controller.abort('canceled')
 
 /** 2. by `timeout` config */
-requete.get('/download-large-thing', { timeout: 60000 })
+requete.get('/fetch-large-thing', { timeout: 60000 })
 ```
 
 ## Request Adapter
@@ -474,14 +460,12 @@ interface IResponse<Data = any> {
   type: ResponseType
   url: string
   data: Data
-  /** response body parser for Requete */
-  body(): Promise<Data>
   /** response text when responseType is `json` or `text` */
   responseText?: string
 }
 
 abstract class Adapter {
-  abstract request<D>(ctx: IContext<D>): Promise<IResponse<D>>
+  abstract request(ctx: IContext): Promise<IResponse>
 }
 ```
 

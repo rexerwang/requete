@@ -166,15 +166,12 @@ export class Requete {
    *   // wait for request responding
    *   await next()
    *
-   *   // response body
+   *   // transformed response body
    *   console.log(ctx.data)
-   *   // response
-   *   console.log(ctx.response)
    *
    *   // throw a request error
    *   if (!ctx.data) ctx.throw('no response data')
    * })
-   *
    * ```
    */
   use(middleware: Middleware) {
@@ -239,8 +236,9 @@ export class Requete {
           if (this.status !== -1)
             this.throw('Cannot set abortSignal after next().')
 
-          const abort = new TimeoutAbortController(this.request.timeout ?? 0)
-          this.request.abort = abort
+          this.request.abort = new TimeoutAbortController(
+            this.request.timeout ?? 0
+          )
         }
 
         return this.request.abort

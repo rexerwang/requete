@@ -1,5 +1,18 @@
 # Changelog
 
+# [1.1.0](https://github.com/rexerwang/requete/compare/v1.0.4...v1.1.0) (2023-05-01)
+
+### Bug Fixes
+
+- add logger to Requete instead middleware ([a21b9b1](https://github.com/rexerwang/requete/commit/a21b9b14ecb54d3937e1b2f6ac79777e723c0737))
+- **core:** `Requete.logger` as public ([9267cf7](https://github.com/rexerwang/requete/commit/9267cf714ab0ad8c94e56791eff85d0e185cdb74))
+- **shared:** logger & specs ([f593c65](https://github.com/rexerwang/requete/commit/f593c6540ddf4d0600c2e4c99f90c9f6ed40712d))
+- umd exports ([30b993a](https://github.com/rexerwang/requete/commit/30b993a826cac10ddf4a5d1be9984bfb315d1247))
+
+### Features
+
+- optimize modules shared, adapter, middleware ([861f52f](https://github.com/rexerwang/requete/commit/861f52f0211ccd80aedcae2989f8924f0c360d45))
+
 ## [1.0.4](https://github.com/rexerwang/requete/compare/v1.0.3...v1.0.4) (2023-04-30)
 
 ### Bug Fixes

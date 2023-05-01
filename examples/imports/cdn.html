@@ -47,9 +47,6 @@
     <!-- <script src="https://unpkg.com/requete/polyfill.min.js"></script> -->
     <script>
       const output = (obj) => JSON.stringify(obj, null, 2)
-      const logger = (r) => {
-        console.log(r.request.method, r.url, r.status, `(${r.statusText})`)
-      }
 
       const postsEl = document.querySelector('.posts code')
       const commentsEl = document.querySelector('.comments code')
@@ -58,7 +55,6 @@
       requete
         .get('/posts')
         .then((r) => {
-          logger(r)
           postsEl.innerHTML = output(r.data)
         })
         .catch((e) => {
@@ -68,7 +64,6 @@
       requete
         .get('/comments')
         .then((r) => {
-          logger(r)
           commentsEl.innerHTML = output(r.data)
         })
         .catch((e) => {
@@ -78,7 +73,6 @@
       requete
         .get('/profiles')
         .then((r) => {
-          logger(r)
           profileEl.innerHTML = output(r.data)
         })
         .catch((e) => {

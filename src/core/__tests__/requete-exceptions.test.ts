@@ -1,7 +1,8 @@
-import { Requete } from 'requete'
 import { FetchAdapter } from 'requete/adapter'
 import { RequestError } from 'requete/shared'
 import { toAny } from 'test/utils'
+
+import { Requete } from '../Requete'
 
 describe('Requete exceptions specs', () => {
   beforeEach(() => {

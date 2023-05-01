@@ -7,24 +7,26 @@ export class Logger {
     this.name = name && `[${name}]`
   }
 
-  toObject(headers?: Headers) {
-    const obj: any = {}
-    headers?.forEach((value, key) => {
-      obj[key] = value
-    })
-    return obj
-  }
-
   res(ctx: IContext) {
+    const headers = (headers?: Headers) => {
+      if (headers) {
+        const obj: any = {}
+        headers?.forEach((value, key) => {
+          obj[key] = value
+        })
+        return obj
+      }
+    }
+
     return {
       request: {
         data: ctx.request.data,
         params: ctx.request.params,
-        headers: this.toObject(ctx.request.headers),
+        headers: headers(ctx.request.headers),
       },
       response: {
         data: ctx.data,
-        headers: this.toObject(ctx.headers),
+        headers: headers(ctx.headers),
         responseText: ctx.responseText,
       },
     }

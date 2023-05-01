@@ -1,4 +1,4 @@
-import type { IContext } from './Requete'
+import type { IContext } from 'requete'
 
 export class RequestError extends Error {
   name = 'RequestError'

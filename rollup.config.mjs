@@ -26,7 +26,7 @@ const useBabel = () =>
     presets: ['@babel/preset-env'],
   })
 
-const setupModuleConfig = (file, external, exports) => {
+const setupModuleConfig = (file, external = /^requete/, exports = null) => {
   const module = pkg.exports[file === 'index' ? '.' : `./${file}`]
   const input = `src/${file}.ts`
 
@@ -112,7 +112,7 @@ const setupUMDConfig = (config) => {
 }
 
 export default [].concat(
-  setupModuleConfig('index', null, {
+  setupModuleConfig('index', /^requete/, {
     default: 'index',
     RequestError: 'RequestError',
     Requete: 'Requete',
@@ -121,6 +121,7 @@ export default [].concat(
   }),
   setupModuleConfig('middleware'),
   setupModuleConfig('adapter'),
+  setupModuleConfig('shared'),
   setupUMDConfig({
     input: 'src/global.mjs',
     output: {

@@ -1,7 +1,6 @@
+import { Method, TimeoutAbortController } from 'requete'
 import { toAny } from 'test/utils'
 
-import { TimeoutAbortController } from '../../core/AbortController'
-import { Method } from '../../core/Requete'
 import { FetchAdapter } from '../FetchAdapter'
 
 describe('FetchAdapter specs', () => {

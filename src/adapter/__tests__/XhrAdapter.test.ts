@@ -1,8 +1,7 @@
+import { Method, TimeoutAbortController } from 'requete'
 import { sleep, toAny } from 'test/utils'
 
-import { TimeoutAbortController } from '../../core/AbortController'
-import { Method } from '../../core/Requete'
-import * as helpers from '../../helpers'
+import * as progress from '../../shared/progress'
 import { XhrAdapter } from '../XhrAdapter'
 
 describe('XhrAdapter specs', () => {
@@ -410,7 +409,7 @@ describe('XhrAdapter specs', () => {
     it('should not set `onDownloadProgress` to xhr when given the option', () => {
       const handleStub = vi.fn()
       const spy = vi
-        .spyOn(helpers, 'progressEventReducer')
+        .spyOn(progress, 'progressEventReducer')
         .mockImplementation(toAny(vi.fn().mockReturnValue(handleStub)))
 
       const addEventListenerStub = vi.fn()
@@ -436,7 +435,7 @@ describe('XhrAdapter specs', () => {
     it('should set `onUploadProgress` to xhr when given the option & it support upload', () => {
       const handleStub = vi.fn()
       const spy = vi
-        .spyOn(helpers, 'progressEventReducer')
+        .spyOn(progress, 'progressEventReducer')
         .mockImplementation(toAny(vi.fn().mockReturnValue(handleStub)))
 
       const addEventListenerStub = vi.fn()
@@ -462,7 +461,7 @@ describe('XhrAdapter specs', () => {
 
     it('should not set `onUploadProgress` to xhr when it not support upload', () => {
       const spy = vi
-        .spyOn(helpers, 'progressEventReducer')
+        .spyOn(progress, 'progressEventReducer')
         .mockImplementation(toAny(vi.fn()))
 
       const addEventListenerStub = vi.fn()

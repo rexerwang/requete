@@ -25,4 +25,29 @@ assert.equal(typeof FetchAdapter, 'function', 'requete/adapter:FetchAdapter')
 assert.equal(typeof XhrAdapter, 'function', 'requete/adapter:XhrAdapter')
 assert.equal(typeof createAdapter, 'function', 'requete/adapter:createAdapter')
 
-console.log('All tests passed.')
+const {
+  getUri,
+  mergeHeaders,
+  parseHeaders,
+  Logger,
+  pick,
+  progressEventReducer,
+  transformRequestBody,
+} = require('requete/shared')
+assert.equal(typeof getUri, 'function', 'requete/shared:getUri')
+assert.equal(typeof mergeHeaders, 'function', 'requete/shared:mergeHeaders')
+assert.equal(typeof parseHeaders, 'function', 'requete/shared:parseHeaders')
+assert.equal(typeof Logger, 'function', 'requete/shared:Logger')
+assert.equal(typeof pick, 'function', 'requete/shared:pick')
+assert.equal(
+  typeof progressEventReducer,
+  'function',
+  'requete/shared:progressEventReducer'
+)
+assert.equal(
+  typeof transformRequestBody,
+  'function',
+  'requete/shared:transformRequestBody'
+)
+
+console.log('All commonjs exports specs passed.')

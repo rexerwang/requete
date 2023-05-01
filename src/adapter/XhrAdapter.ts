@@ -1,10 +1,11 @@
-import { RequestError } from '../core/RequestError'
-import type { IContext, IResponse } from '../core/Requete'
+import { IContext, IResponse } from 'requete'
 import {
   parseHeaders,
   progressEventReducer,
+  RequestError,
   transformRequestBody,
-} from '../helpers'
+} from 'requete/shared'
+
 import { Adapter } from './Adapter'
 
 export interface IProgressEvent {

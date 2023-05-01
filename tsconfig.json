@@ -17,7 +17,9 @@
     "types": ["vitest/globals"],
     "rootDir": ".",
     "paths": {
-      "test/utils": ["./test/utils"]
+      "test/utils": ["./test/utils"],
+      "requete": ["./src/index.ts"],
+      "requete/*": ["./src/*.ts"]
     }
   },
   "include": ["src"],

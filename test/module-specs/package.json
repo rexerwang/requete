@@ -1,0 +1,14 @@
+{
+  "name": "module-specs",
+  "version": "1.0.0",
+  "description": "requete module (commonjs/esm) specs",
+  "main": "index.cjs",
+  "scripts": {
+    "test": "pnpm test:cjs && pnpm test:mjs",
+    "test:cjs": "node index.cjs",
+    "test:mjs": "node esm.mjs"
+  },
+  "dependencies": {
+    "requete": "file:../../dist"
+  }
+}

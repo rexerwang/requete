@@ -1,9 +1,4 @@
-import {
-  Adapter,
-  createAdapter,
-  FetchAdapter,
-  XhrAdapter,
-} from 'requete/adapter'
+import { Adapter, createAdapter } from 'requete/adapter'
 import { getUri, Logger, mergeHeaders, pick } from 'requete/shared'
 import { RequestError } from 'requete/shared'
 

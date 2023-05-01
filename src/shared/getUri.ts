@@ -1,4 +1,4 @@
-import type { IRequest } from '../core/Requete'
+import type { IRequest } from 'requete'
 
 function stringifyUrl(target: string, query: NonNullable<IRequest['params']>) {
   const [url, search] = target.split('?')

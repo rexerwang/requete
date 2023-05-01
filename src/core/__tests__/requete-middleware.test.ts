@@ -1,4 +1,5 @@
-import { FetchAdapter } from '../../adapter'
+import { FetchAdapter } from 'requete/adapter'
+
 import { Requete } from '../Requete'
 
 describe('Requete middleware specs', () => {

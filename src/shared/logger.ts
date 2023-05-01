@@ -1,5 +1,6 @@
-import { RequestError } from '../core/RequestError'
-import type { IContext } from '../core/Requete'
+import type { IContext } from 'requete'
+
+import { RequestError } from './RequestError'
 
 export class Logger {
   constructor(private name: string, private level: number) {
@@ -39,13 +40,14 @@ export class Logger {
     if (this.level < 1) return
     if (!(e instanceof RequestError)) return console.error(e)
 
-    const { request, url, status, statusText } = e.ctx
+    const { ctx } = e as RequestError
+    const { request, url, status, statusText } = ctx
 
     console.error(
       `${this.name} ${request.method} ${url} ${status} (${
         status === -1 ? 'Before Request' : statusText
       })\n%o\n${e.stack}`,
-      this.res(e.ctx)
+      this.res(ctx)
     )
   }
 

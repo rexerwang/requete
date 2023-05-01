@@ -1,4 +1,5 @@
-import { FetchAdapter } from '../../adapter'
+import { FetchAdapter } from 'requete/adapter'
+
 import { Method, Requete } from '../Requete'
 
 describe('Requete request configs', () => {

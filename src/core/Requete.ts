@@ -1,8 +1,14 @@
-import { Adapter, createAdapter } from '../adapter'
-import { getUri, Logger, mergeHeaders, pick } from '../helpers'
+import {
+  Adapter,
+  createAdapter,
+  FetchAdapter,
+  XhrAdapter,
+} from 'requete/adapter'
+import { getUri, Logger, mergeHeaders, pick } from 'requete/shared'
+import { RequestError } from 'requete/shared'
+
 import { TimeoutAbortController } from './AbortController'
 import { compose } from './compose'
-import { RequestError } from './RequestError'
 
 export type Method =
   | 'GET'

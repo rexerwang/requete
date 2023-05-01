@@ -8,6 +8,7 @@
     "clean": "rimraf -rf ./dist",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:module": "cd ./test/module-specs && pnpm it --force",
     "serve": "json-server -c ./examples/mocks/json-server.json ./examples/mocks/db.json",
     "release": "release-it",
     "postinstall": "husky install"
@@ -32,6 +33,11 @@
       "types": "./adapter.d.ts",
       "import": "./adapter.mjs",
       "require": "./adapter.cjs"
+    },
+    "./shared": {
+      "types": "./shared.d.ts",
+      "import": "./shared.mjs",
+      "require": "./shared.cjs"
     },
     "./polyfill": "./polyfill.umd.js",
     "./package.json": "./package.json"

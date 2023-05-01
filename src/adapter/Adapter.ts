@@ -1,4 +1,4 @@
-import type { IContext, IResponse } from '../core/Requete'
+import type { IContext, IResponse } from 'requete'
 
 export abstract class Adapter {
   static readonly supported: boolean

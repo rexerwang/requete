@@ -1,9 +1,9 @@
-import type { IProgressEvent } from '../adapter/XhrAdapter'
+import type { IProgressEvent } from 'requete/adapter'
 
 /**
  * Calculate data maxRate
  *
- * Forked: https://github.com/axios/axios/blob/6f360a2531d8d70363fd9becef6a45a323f170e2/lib/helpers/speedometer.js
+ * Forked: https://github.com/axios/axios/blob/6f360a2531d8d70363fd9becef6a45a323f170e2/lib/helper/speedometer.js
  */
 function speedometer(samplesCount = 10, min = 1000) {
   const bytes = new Array(samplesCount)

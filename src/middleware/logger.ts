@@ -1,5 +1,5 @@
-import type { Middleware } from '../core/Requete'
-import { Logger } from '../helpers'
+import type { Middleware } from 'requete'
+import { Logger } from 'requete/shared'
 
 interface IOption {
   name?: string

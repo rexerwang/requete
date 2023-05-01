@@ -1,4 +1,4 @@
-import type { RequestBody } from '../core/Requete'
+import type { RequestBody } from 'requete'
 
 export function transformRequestBody(data?: RequestBody) {
   const toString = Object.prototype.toString.call(data)

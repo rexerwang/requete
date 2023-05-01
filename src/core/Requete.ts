@@ -151,7 +151,8 @@ export class Requete {
   private configs?: RequestConfig
   private adapter: Adapter
   private middlewares: Middleware[] = []
-  private logger: Logger
+
+  logger: Logger
 
   constructor(config?: RequestConfig) {
     this.configs = Object.assign({ method: 'GET' }, Requete.defaults, config)

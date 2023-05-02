@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>requete umd imports</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      code {
+        font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+          monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <div class="blob">
+        <h4>blob</h4>
+        <img src="" alt="blob image" />
+      </div>
+    </main>
+    <script src="/requete/index.umd.js"></script>
+    <script>
+      requete
+        .get('https://placehold.co/400x100', {
+          params: { text: 'blob responseType' },
+          responseType: 'blob',
+          mode: 'cors',
+        })
+        .then((r) => {
+          document
+            .querySelector('.blob img')
+            .setAttribute('src', URL.createObjectURL(r.data))
+        })
+    </script>
+  </body>
+</html>

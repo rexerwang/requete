@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.2](https://github.com/rexerwang/requete/compare/v1.1.1...v1.1.2) (2023-05-02)
+
+### Features
+
+- replay func on context ([fd2550b](https://github.com/rexerwang/requete/commit/fd2550b39d790788e297289c059a08c5548303e4))
+
 ## [1.1.1](https://github.com/rexerwang/requete/compare/v1.1.0...v1.1.1) (2023-05-02)
 
 ### Bug Fixes

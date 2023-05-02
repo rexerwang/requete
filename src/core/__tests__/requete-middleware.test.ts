@@ -4,16 +4,18 @@ import { toAny } from 'test/utils'
 import { Requete } from '../Requete'
 
 describe('Requete middleware specs', () => {
+  const spy = vi.spyOn(FetchAdapter.prototype, 'request').mockImplementation(
+    vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      url: '/do-mock',
+      data: 'null',
+    })
+  )
+
   beforeEach(() => {
-    vi.spyOn(FetchAdapter.prototype, 'request').mockImplementation(
-      vi.fn().mockResolvedValue({
-        ok: true,
-        status: 200,
-        statusText: 'OK',
-        url: '/do-mock',
-        data: 'null',
-      })
-    )
+    spy.mockClear()
   })
 
   it('should execute middleware in order according to the onion model with request context', async () => {
@@ -51,6 +53,20 @@ describe('Requete middleware specs', () => {
     expect(after).nthCalledWith(3, res.data)
   })
 
+  it('should throws when call next() duplicated', async () => {
+    vi.spyOn(console, 'error').mockImplementation(toAny(vi.fn()))
+
+    const requete = new Requete()
+    requete.use(async (ctx, next) => {
+      await next()
+      await next()
+    })
+
+    await expect(requete.post('/do-mock')).rejects.toThrow(
+      'next() called multiple times'
+    )
+  })
+
   it('should set request header correctly in middleware', async () => {
     const requete = new Requete()
     requete.use(async (ctx, next) => {
@@ -82,17 +98,19 @@ describe('Requete middleware specs', () => {
     expect(res.request.abort).toEqual(controller)
   })
 
-  it('should throws when call next() duplicated', async () => {
-    vi.spyOn(console, 'error').mockImplementation(toAny(vi.fn()))
-
+  it('should replay the request in middleware', async () => {
     const requete = new Requete()
+
     requete.use(async (ctx, next) => {
       await next()
-      await next()
+
+      if (!ctx.request.custom?.replay) {
+        await ctx.replay()
+      }
     })
 
-    await expect(requete.post('/do-mock')).rejects.toThrow(
-      'next() called multiple times'
-    )
+    const { request } = await requete.post('/do-mock')
+    expect(spy).toBeCalledTimes(2)
+    expect(request.custom?.replay).toBe(1)
   })
 })

@@ -1,4 +1,4 @@
-import type { IContext, IRequest, IResponse } from 'requete'
+import type { IContext, IResponse } from 'requete'
 import { pick, transformRequestBody } from 'requete/shared'
 
 import { Adapter } from './Adapter'
@@ -18,12 +18,12 @@ export class FetchAdapter extends Adapter {
       'redirect',
       'referrer',
       'referrerPolicy',
-    ]
+    ] as const
 
     const init: RequestInit = supports.reduce((req, key) => {
-      const value = request[key as keyof IRequest]
+      const value: any = request[key]
       if (value !== undefined) {
-        req[key as keyof RequestInit] = value
+        req[key] = value
       }
       return req
     }, {} as RequestInit)

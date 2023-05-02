@@ -167,6 +167,7 @@ requete.put('/users/profile/123', { name: 'Jay Chou' })
 - **Throwing an exception in middleware will break the middleware execution chain.**
 - `next()` must be called asynchronously in middleware
 - `ctx` is the requete context object, type `IContext`. more information in [here](#response-typings).
+- Even if `ctx.ok === false`, there`s no error will be thrown in middleware
 
 ```ts
 requete
@@ -177,18 +178,11 @@ requete
     // set Authorization header
     else ctx.set('Authorization', token)
 
-    try {
-      // wait for request responding
-      await next()
-    } catch (e) {
-      // when token expired, re-authenticate
-      if (ctx.status === 401) {
-        authenticate()
-      }
+    // wait for request responding
+    await next()
 
-      // continue to throws, and will break the subsequent execution
-      throw e
-    }
+    // when unauthorized, re-authenticate.
+    if (ctx.status === 401) reauthenticate()
   })
   .use((ctx, next) =>
     next().then(() => {
@@ -198,20 +192,6 @@ requete
       }
     })
   )
-```
-
-#### Builtin middleware
-
-`requete` also provides the following middleware for use:
-
-1. ~~`logger`: used to output request logs. In general, its used at **last**.~~
-
-```ts
-import requete from 'requete'
-import { logger } from 'requete/middleware'
-
-/** @deprecated Use `config.verbose` instead */
-requete.use(logger())
 ```
 
 ## Request Config
@@ -337,11 +317,50 @@ interface IContext<Data = any> {
    * @throws {RequestError}
    */
   abort(): TimeoutAbortController
+  /**
+   * Assign to current context
+   */
+  assign(context: Partial<IContext>): void
+
+  /**
+   * Replay current request.
+   * And assign new context to current, with replay`s response
+   */
+  replay(): Promise<void>
 }
 ```
 
-In middleware, the first argument is `ctx` of type `IContext`. You can call methods such as `ctx.set`, `ctx.throw`, `ctx.abort` before sending the request (i.e., before the await next() statement).  
+In middleware, the first argument is `ctx` of type `IContext`. You can call methods such as `ctx.set`, `ctx.throw`, `ctx.abort` before sending the request (i.e., before the `await next()` statement).
 Otherwise, if these methods are called in other cases, a `RequestError` will be thrown.
+
+`ctx.replay` is used to replay the request in middleware or other case.  
+After respond, will assign new context to current, with replay\`s response,
+And will add counts of replay in `ctx.request.custom.replay`.
+
+Examples:
+
+```ts
+const auth = {
+  token: '<token>',
+  authenticate: requete.post('/authenticate').then((r) => {
+    auth.token = r.data.token
+  }),
+}
+
+requete.use(async (ctx, next) => {
+  ctx.set('Authorization', auth.token)
+
+  await next()
+
+  // when unauthorized, re-authenticate
+  // Maybe causes dead loop if always respond 401
+  if (ctx.status === 401) {
+    await auth.authenticate()
+    // replay request after re-authenticated.
+    await ctx.replay()
+  }
+})
+```
 
 ## RequestError
 

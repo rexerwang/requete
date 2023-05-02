@@ -84,7 +84,7 @@ export interface IRequest extends Omit<RequestConfig, 'verbose'> {
   /** specify request adapter */
   adapter?: Adapter
   /** flexible custom field */
-  custom?: any
+  custom?: Record<string, any>
 }
 
 /** {@link https://developer.mozilla.org/en-US/docs/Web/API/Response} */
@@ -133,6 +133,17 @@ export interface IContext<Data = any> extends IResponse<Data> {
    * @throws {RequestError}
    */
   abort(): TimeoutAbortController
+
+  /**
+   * Assign to current context
+   */
+  assign(context: Partial<IContext>): void
+
+  /**
+   * Replay current request
+   * And assign new context to current, with replay`s response
+   */
+  replay(): Promise<void>
 }
 
 export type Middleware = (
@@ -221,6 +232,8 @@ export class Requete {
 
   private createContext<D>(config: IRequest) {
     const request = this.createRequest(config)
+    const doRequest = this.request.bind(this)
+
     const ctx: IContext<D> = {
       request,
       status: -1,
@@ -264,6 +277,18 @@ export class Requete {
         }
 
         return this.request.abort
+      },
+      assign(context) {
+        Object.assign(this, context)
+      },
+      async replay() {
+        // count replay #
+        this.request.custom = Object.assign({}, this.request.custom, {
+          replay: this.request.custom?.replay ?? 0 + 1,
+        })
+
+        const context = await doRequest(this.request)
+        this.assign(context)
       },
     }
 

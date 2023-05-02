@@ -6,6 +6,20 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      increment:
+        type: choice
+        description: Release version increment
+        options:
+          - auto
+          - patch
+          - minor
+          - major
+        default: auto
+      dry:
+        type: boolean
+        description: dry-run
+        default: false
 
 permissions:
   contents: write
@@ -35,6 +49,8 @@ jobs:
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
       - name: Run release
-        run: pnpm run release --ci
+        run: pnpm run release $ARG_INCREMENT --ci --verbose $ARG_DRY_RUN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARG_INCREMENT: ${{ github.event.inputs.increment == 'auto' && '' || github.event.inputs.increment }}
+          ARG_DRY_RUN: ${{ github.event.inputs.dry == 'true' && '--dry-run' || '' }}

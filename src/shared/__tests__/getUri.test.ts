@@ -1,118 +1,91 @@
-import { toAny } from 'test/utils'
-
 import { getUri } from '../getUri'
 
 describe('getUri specs', () => {
   it('should not join when given a absolute url', () => {
     expect(
-      getUri(
-        toAny({
-          baseURL: 'https://requete.com',
-          url: 'https://api.com/api/v1/posts',
-        })
-      )
+      getUri({
+        baseURL: 'https://requete.com',
+        url: 'https://api.com/api/v1/posts',
+      })
     ).toBe('https://api.com/api/v1/posts')
 
     expect(
-      getUri(
-        toAny({
-          baseURL: 'https://requete.com',
-          url: '//api.com/api/v1/posts',
-        })
-      )
+      getUri({
+        baseURL: 'https://requete.com',
+        url: '//api.com/api/v1/posts',
+      })
     ).toBe('//api.com/api/v1/posts')
   })
 
   it('should not join when baseURL is falsy', () => {
     expect(
-      getUri(
-        toAny({
-          baseURL: undefined,
-          url: '/api/v1/posts',
-        })
-      )
+      getUri({
+        baseURL: undefined,
+        url: '/api/v1/posts',
+      })
     ).toBe('/api/v1/posts')
 
     expect(
-      getUri(
-        toAny({
-          baseURL: '',
-          url: '/api/v1/posts',
-        })
-      )
+      getUri({
+        baseURL: '',
+        url: '/api/v1/posts',
+      })
     ).toBe('/api/v1/posts')
   })
 
   it('should join with baseURL with separator', () => {
     expect(
-      getUri(
-        toAny({
-          baseURL: 'https://requete.com/',
-          url: '/api/v1/posts',
-        })
-      )
+      getUri({
+        baseURL: 'https://requete.com/',
+        url: '/api/v1/posts#t=1',
+      })
     ).toBe('https://requete.com/api/v1/posts')
 
     expect(
-      getUri(
-        toAny({
-          baseURL: 'https://requete.com//',
-          url: '/api/v1/posts/',
-        })
-      )
+      getUri({
+        baseURL: 'https://requete.com//',
+        url: '/api/v1/posts/',
+      })
     ).toBe('https://requete.com/api/v1/posts/')
   })
 
   it('should join url with query-string when given string params', () => {
     expect(
-      getUri(
-        toAny({
-          url: 'https://requete.com/api/v1/posts',
-          params: 'a=1',
-        })
-      )
+      getUri({
+        url: 'https://requete.com/api/v1/posts',
+        params: 'a=1',
+      })
     ).toBe('https://requete.com/api/v1/posts?a=1')
 
     expect(
-      getUri(
-        toAny({
-          url: 'https://requete.com/api/v1/posts',
-          params: '?a=1',
-        })
-      )
-    ).toBe('https://requete.com/api/v1/posts?a=1')
+      getUri({
+        url: 'https://requete.com/api/v1/posts?t=123',
+        params: '?a=1',
+      })
+    ).toBe('https://requete.com/api/v1/posts?t=123&a=1')
   })
 
   it('should join url with query-string when given object params', () => {
     expect(
-      getUri(
-        toAny({
-          url: 'https://requete.com/api/v1/posts',
-          params: { a: 1, b: 2 },
-        })
-      )
+      getUri({
+        url: 'https://requete.com/api/v1/posts',
+        params: {
+          a: '1+1',
+          b: '2 1',
+          c: null,
+          d: undefined,
+          arr: [1, 2, 3],
+        },
+      })
+    ).toBe('https://requete.com/api/v1/posts?a=1%2B1&b=2+1&arr=1&arr=2&arr=3')
+  })
+
+  it('should join url with query-string when given the URLSearchParams', () => {
+    expect(
+      getUri({
+        url: 'https://requete.com/api/v1/posts',
+        params: new URLSearchParams({ a: '1', b: '2' }),
+      })
     ).toBe('https://requete.com/api/v1/posts?a=1&b=2')
-  })
-
-  it('should join url with query-string when given url with params & config.params', () => {
-    expect(
-      getUri(
-        toAny({
-          url: 'https://requete.com/api/v1/posts?c=3',
-          params: { a: 1, b: 2 },
-        })
-      )
-    ).toBe('https://requete.com/api/v1/posts?c=3&a=1&b=2')
-  })
-
-  it('should overwrite origin url params when given same keys in params', () => {
-    expect(
-      getUri(
-        toAny({
-          url: 'https://requete.com/api/v1/posts?a=3',
-          params: { a: 1, b: 2, c: 4 },
-        })
-      )
-    ).toBe('https://requete.com/api/v1/posts?a=1&b=2&c=4')
   })
 })

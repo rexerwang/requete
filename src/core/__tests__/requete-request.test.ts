@@ -41,9 +41,11 @@ describe('Requete request configs', () => {
     expect(ctx.request.url).toBe('https://api.mock.com/api/v2/do-mock?id=1')
 
     ctx = await requete.get('do-mock?id=1', { params: { id: '2' } })
-    expect(ctx.request.url).toBe('https://api.mock.com/api/v1/do-mock?id=2')
+    expect(ctx.request.url).toBe(
+      'https://api.mock.com/api/v1/do-mock?id=1&id=2'
+    )
 
-    ctx = await requete.get('do-mock?id=1', { params: 'id=2' })
+    ctx = await requete.get('do-mock', { params: 'id=2' })
     expect(ctx.request.url).toBe('https://api.mock.com/api/v1/do-mock?id=2')
   })
 })

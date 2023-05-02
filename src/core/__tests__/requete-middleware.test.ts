@@ -1,4 +1,5 @@
 import { FetchAdapter } from 'requete/adapter'
+import { toAny } from 'test/utils'
 
 import { Requete } from '../Requete'
 
@@ -82,6 +83,8 @@ describe('Requete middleware specs', () => {
   })
 
   it('should throws when call next() duplicated', async () => {
+    vi.spyOn(console, 'error').mockImplementation(toAny(vi.fn()))
+
     const requete = new Requete()
     requete.use(async (ctx, next) => {
       await next()

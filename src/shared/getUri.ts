@@ -1,19 +1,24 @@
 import type { IRequest } from 'requete'
 
-function stringifyUrl(target: string, query: NonNullable<IRequest['params']>) {
-  const [url, search] = target.split('?')
-  const searchParams = new URLSearchParams(search)
-  if (typeof query === 'string') {
-    new URLSearchParams(query).forEach((value, key) => {
-      searchParams.set(key, value)
-    })
+function stringifyUrl(url: string, query: NonNullable<IRequest['params']>) {
+  let searchParams: URLSearchParams
+
+  if (query instanceof URLSearchParams) {
+    searchParams = query
+  } else if (typeof query === 'string' || Array.isArray(query)) {
+    searchParams = new URLSearchParams(query)
   } else {
+    searchParams = new URLSearchParams()
     Object.entries(query).forEach(([key, value]) => {
-      searchParams.set(key, encodeURIComponent(value))
+      if (Array.isArray(value)) {
+        value.forEach((val) => searchParams.append(key, val.toString()))
+      } else if (value != null) {
+        searchParams.set(key, value.toString())
+      }
     })
   }
 
-  return url + '?' + searchParams.toString()
+  return url + (url.indexOf('?') === -1 ? '?' : '&') + searchParams.toString()
 }
 
 function isAbsolute(url: string) {
@@ -22,6 +27,9 @@ function isAbsolute(url: string) {
 
 export function getUri(config: IRequest) {
   let url = config.url
+
+  const hashIndex = url.indexOf('#')
+  if (hashIndex > -1) url = url.slice(0, hashIndex)
 
   if (!isAbsolute(url) && config.baseURL) {
     url = config.baseURL.replace(/\/+$/, '') + '/' + url.replace(/^\/+/, '')

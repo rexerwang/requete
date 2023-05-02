@@ -62,7 +62,18 @@ export interface IRequest extends Omit<RequestConfig, 'verbose'> {
    */
   method?: Method
   /** A string or object to set querystring of url */
-  params?: string | Record<string, string | number | boolean>
+  params?:
+    | string
+    | URLSearchParams
+    | Record<
+        string,
+        | string
+        | number
+        | boolean
+        | null
+        | undefined
+        | Array<string | number | boolean>
+      >
   /** request`s body */
   data?: RequestBody
   /**
@@ -138,6 +149,7 @@ export class Requete {
     headers: {
       Accept: 'application/json, text/plain, */*',
     },
+    verbose: 1,
     toJSON: (text: string | null | undefined) => {
       if (text) return JSON.parse(text)
     },

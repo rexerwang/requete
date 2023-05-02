@@ -5,6 +5,8 @@ import requete, {
   Requete,
   TimeoutAbortController,
   create,
+  FetchAdapter,
+  XhrAdapter,
 } from 'requete'
 equal(typeof requete, 'object', 'requete')
 equal(typeof requete.request, 'function', 'requete.request')
@@ -16,19 +18,14 @@ equal(
   'requete.TimeoutAbortController'
 )
 equal(typeof create, 'function', 'requete.create')
+equal(typeof FetchAdapter, 'function', 'requete.FetchAdapter')
+equal(typeof XhrAdapter, 'function', 'requete.XhrAdapter')
 
 import { logger } from 'requete/middleware'
 equal(typeof logger, 'function', 'requete/middleware:logger')
 
-import {
-  Adapter,
-  FetchAdapter,
-  XhrAdapter,
-  createAdapter,
-} from 'requete/adapter'
+import { Adapter, createAdapter } from 'requete/adapter'
 equal(typeof Adapter, 'function', 'requete/adapter:Adapter')
-equal(typeof FetchAdapter, 'function', 'requete/adapter:FetchAdapter')
-equal(typeof XhrAdapter, 'function', 'requete/adapter:XhrAdapter')
 equal(typeof createAdapter, 'function', 'requete/adapter:createAdapter')
 
 import {

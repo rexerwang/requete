@@ -114,10 +114,12 @@ const setupUMDConfig = (config) => {
 export default [].concat(
   setupModuleConfig('index', /^requete/, {
     default: 'index',
-    RequestError: 'RequestError',
+    create: 'create',
     Requete: 'Requete',
     TimeoutAbortController: 'TimeoutAbortController',
-    create: 'create',
+    FetchAdapter: 'adapter.FetchAdapter',
+    XhrAdapter: 'adapter.XhrAdapter',
+    RequestError: 'shared.RequestError',
   }),
   setupModuleConfig('middleware'),
   setupModuleConfig('adapter'),

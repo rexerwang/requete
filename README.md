@@ -469,8 +469,7 @@ Of course, you can also customize which adapter to use by declaring the `adapter
 For example, in browser environment, when obtaining download or upload progress events, you can choose to use the `XhrAdapter`. (like [Axios](https://github.com/axios/axios#request-config))
 
 ```ts
-import requete from 'requete'
-import { XhrAdapter } from 'requete/adapter'
+import requete, { XhrAdapter } from 'requete'
 
 requete.get('/download-or-upload', {
   adapter: new XhrAdapter({ onDownloadProgress(e) {}, onUploadProgress(e) {} }),

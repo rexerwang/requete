@@ -131,7 +131,10 @@
       }
     },
     "hooks": {
-      "after:bump": "pnpm build",
+      "after:bump": [
+        "pnpm build",
+        "pnpm test:module"
+      ],
       "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
     }
   },

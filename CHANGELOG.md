@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.1](https://github.com/rexerwang/requete/compare/v1.1.0...v1.1.1) (2023-05-02)
+
+### Bug Fixes
+
+- getUri stringify url ([dc59161](https://github.com/rexerwang/requete/commit/dc591610932753a332c22431203793a950cabb8f))
+
 # [1.1.0](https://github.com/rexerwang/requete/compare/v1.0.4...v1.1.0) (2023-05-01)
 
 ### Bug Fixes

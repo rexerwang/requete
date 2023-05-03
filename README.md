@@ -364,7 +364,7 @@ requete.use(async (ctx, next) => {
 
 ## RequestError
 
-`RequestError` inherits from `Error`, contains the request context information, and provides the formatted output method (`print()`).
+`RequestError` inherits from `Error`, contains the request context information.
 
 It should be noted that all exceptions in requete are `RequestError`.
 

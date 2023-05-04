@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.4](https://github.com/rexerwang/requete/compare/v1.1.3...v1.1.4) (2023-05-04)
+
+### Bug Fixes
+
+- exports & Requete issues ([1a41a7a](https://github.com/rexerwang/requete/commit/1a41a7a2ef67183c4bbc127d2d6e001daae607fe))
+
 ## [1.1.3](https://github.com/rexerwang/requete/compare/v1.1.2...v1.1.3) (2023-05-03)
 
 ### Bug Fixes

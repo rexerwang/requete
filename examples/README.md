@@ -1,15 +1,14 @@
 # examples
 
-Contains some examples of using requete, such as importing by `UMD`, `CDN`, or `ES module`.
+Contains some examples of using requete.
 
 ```tree
-examples/
-├── README.md
-├── imports
-│   ├── cdn.html
-│   ├── es.html
-│   └── umd.html
+examples
 ├── index.html
+├── cdn.html
+├── umd.html
+├── middleware.html
+├── responseType.html
 └── mocks                  # mocks by json-server
     ├── db.json            # json data
     ├── json-server.json   # configs
@@ -22,4 +21,6 @@ examples/
 pnpm install
 pnpm build
 pnpm serve
+
+open http://localhost:3000
 ```

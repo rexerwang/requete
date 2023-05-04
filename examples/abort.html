@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>requete middleware example</title>
+    <title>requete AbortController</title>
     <link rel="stylesheet" href="./styles/index.css" />
     <link
       rel="stylesheet"
@@ -16,48 +16,34 @@
 
   <body>
     <main>
-      <div class="posts">
-        <h4>/posts</h4>
+      <div class="abort">
+        <h4>abort 1s</h4>
         <pre><code class="language-json" data-manual>pending...</code></pre>
       </div>
-      <div class="comments">
-        <h4>/comments</h4>
-        <pre><code class="language-json" data-manual>pending...</code></pre>
-      </div>
-      <div class="profile">
-        <h4>/profile</h4>
+      <div class="timeout">
+        <h4>timeout 2s</h4>
         <pre><code class="language-json" data-manual>pending...</code></pre>
       </div>
     </main>
     <script src="./scripts/index.js"></script>
     <script src="/requete/index.umd.js"></script>
     <script>
-      const http = requete.create({ verbose: true }).use(async (ctx, next) => {
-        http.logger.info(ctx.request.url, 'add header "X-Request-Id"')
-
-        ctx.set('X-Request-Id', 'Requete')
-        await next()
-      })
-
-      http
-        .get('/posts')
+      const controller = new requete.TimeoutAbortController(0)
+      requete
+        .get('https://httpbin.org/delay/5?t=abort', { abort: controller })
         .catch((e) => e)
         .then((r) => {
-          document.querySelector('.posts code').innerHTML = printRes(r)
+          document.querySelector('.abort code').innerHTML = printRes(r)
         })
+      // abort request after 1s
+      setTimeout(() => controller.abort('canceled'), 1000)
 
-      http
-        .get('/comments')
+      // set 2s timeout
+      requete
+        .get('https://httpbin.org/delay/5?t=timeout', { timeout: 2000 })
         .catch((e) => e)
         .then((r) => {
-          document.querySelector('.comments code').innerHTML = printRes(r)
-        })
-
-      http
-        .get('/profiles')
-        .catch((e) => e)
-        .then((r) => {
-          document.querySelector('.profile code').innerHTML = printRes(r)
+          document.querySelector('.timeout code').innerHTML = printRes(r)
         })
     </script>
   </body>

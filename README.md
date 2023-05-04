@@ -59,10 +59,10 @@ First, you can import `requete` and use it directly.
 import requete from 'requete'
 
 // Make a GET request
-requete.get('https://your-api.com/api/posts')
+requete.get('https://httpbin.org/get')
 
 // Make a POST request
-requete.post('https://your-api.com/api/posts', { id: 1 })
+requete.post('https://httpbin.org/post', { id: 1 })
 ```
 
 You can also create an instance and specify request configs by calling the `create()` function:
@@ -70,11 +70,11 @@ You can also create an instance and specify request configs by calling the `crea
 ```ts
 import { create } from 'requete'
 
-const requete = create({ baseURL: 'https://your-api.com/api' })
+const requete = create({ baseURL: 'https://httpbin.org' })
 
 // Make a GET request
 requete
-  .get<IPost>('/posts')
+  .get<IData>('/post')
   .then((r) => r.data)
   .catch((error) => {
     console.log(error) // error as `RequestError`
@@ -87,12 +87,12 @@ For commonjs module, `require` it:
 const requete = require('requete')
 
 // use default instance
-requete.get('https://your-api.com/api/posts')
+requete.get('https://httpbin.org/post')
 
 // create new instance
-const http = requete.create({ baseURL: 'https://your-api.com/api' })
+const http = requete.create({ baseURL: 'https://httpbin.org' })
 // Make a POST request
-http.post('posts', { id: 1 })
+http.post('/post', { id: 1 })
 ```
 
 For browser:
@@ -102,7 +102,7 @@ For browser:
 
 <script>
   // use default instance
-  requete.get('/api/posts')
+  requete.get('https://httpbin.org/get')
 
   // create new instance
   const http = requete.create()
@@ -164,10 +164,10 @@ requete.put('/users/profile/123', { name: 'Jay Chou' })
 
 - The calling order of middleware should follow the **Onion Model**.
   like [`Koa middleware`](https://github.com/koajs/koa/blob/master/docs/guide.md#writing-middleware).
-- **Throwing an exception in middleware will break the middleware execution chain.**
-- `next()` must be called asynchronously in middleware
 - `ctx` is the requete context object, type `IContext`. more information in [here](#response-typings).
-- Even if `ctx.ok === false`, there`s no error will be thrown in middleware
+- `next()` must be called asynchronously in middleware
+- **Throwing an exception in middleware will break the middleware execution chain.**
+- Even if `ctx.ok === false`, there`s no error will be thrown in middleware.
 
 ```ts
 requete
@@ -196,7 +196,9 @@ requete
 
 ## Request Config
 
-1. Config for create instance. (`create(config?: RequestConfig)`)
+### Config for create instance.
+
+> `create(config?: RequestConfig)`
 
 ```ts
 interface RequestConfig {
@@ -240,7 +242,9 @@ interface RequestConfig {
 - set `1`: output `error` level
 - set `false` or `0` or not set: no output
 
-1. Config for request methods. (`requete.request(config?: IRequest)`)
+### Config for request methods.
+
+> `requete.request(config?: IRequest)`
 
 ```ts
 interface IRequest extends RequestConfig {
@@ -285,12 +289,7 @@ Requete.defaults.headers = { 'X-Request-Id': 'requete' }
 The response for a request is a context object, specifically of type `IContext`, which contains the following information.
 
 ```ts
-interface IContext<Data = any> {
-  /**
-   * request config.
-   * and empty `Headers` object as default
-   */
-  request: IRequest & { headers: Headers }
+interface IResponse<Data = any> {
   headers: Headers
   ok: boolean
   redirected: boolean
@@ -299,7 +298,16 @@ interface IContext<Data = any> {
   type: ResponseType
   url: string
   data: Data
+  /** response text when responseType is `json` or `text` */
   responseText?: string
+}
+
+interface IContext<Data = any> extends IResponse<Data> {
+  /**
+   * request config.
+   * and empty `Headers` object as default
+   */
+  request: IRequest & { headers: Headers }
 
   /**
    * set request headers
@@ -446,16 +454,17 @@ class TimeoutAbortController {
 ```ts
 import { TimeoutAbortController } from 'requete'
 
-/** 1. by `abort` config */
-const controller = new TimeoutAbortController(60000)
-requete.get('/fetch-large-thing', { abort: controller }).catch((e) => {
-  console.error(e) // "canceled"
-})
-// you can abort request
-controller.abort('canceled')
+/** By `abort` config */
+const controller = new TimeoutAbortController(5000)
+requete
+  .get('https://httpbin.org/delay/10', { abort: controller })
+  .catch((e) => {
+    console.error(e) // "canceled"
+  })
+controller.abort('canceled') // you can abort request
 
-/** 2. by `timeout` config */
-requete.get('/fetch-large-thing', { timeout: 60000 })
+/** By `timeout` config */
+requete.get('https://httpbin.org/delay/10', { timeout: 5000 })
 ```
 
 ## Request Adapter
@@ -479,19 +488,6 @@ requete.get('/download-or-upload', {
 Additionally, `requete` also supports custom adapters by inheriting the `abstract class Adapter` and implementing the `request` method.
 
 ```ts
-interface IResponse<Data = any> {
-  headers: Headers
-  ok: boolean
-  redirected: boolean
-  status: number
-  statusText: string
-  type: ResponseType
-  url: string
-  data: Data
-  /** response text when responseType is `json` or `text` */
-  responseText?: string
-}
-
 abstract class Adapter {
   abstract request(ctx: IContext): Promise<IResponse>
 }

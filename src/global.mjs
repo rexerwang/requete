@@ -1,9 +1,10 @@
-import { FetchAdapter, XhrAdapter } from './adapter'
 import requete, {
   create,
+  FetchAdapter,
   RequestError,
   Requete,
   TimeoutAbortController,
+  XhrAdapter,
 } from './index'
 import * as Middleware from './middleware'
 

@@ -1,6 +1,11 @@
 import { Adapter, createAdapter } from 'requete/adapter'
-import { getUri, Logger, mergeHeaders, pick } from 'requete/shared'
-import { RequestError } from 'requete/shared'
+import {
+  getUri,
+  Logger,
+  mergeHeaders,
+  pick,
+  RequestError,
+} from 'requete/shared'
 
 import { TimeoutAbortController } from './AbortController'
 import { compose } from './compose'
@@ -209,6 +214,10 @@ export class Requete {
    */
   use(middleware: Middleware) {
     this.middlewares.push(middleware)
+    this.logger.info(
+      `Use middleware #${this.middlewares.length}:`,
+      middleware.name || middleware
+    )
     return this
   }
 
@@ -284,7 +293,7 @@ export class Requete {
       async replay() {
         // count replay #
         this.request.custom = Object.assign({}, this.request.custom, {
-          replay: this.request.custom?.replay ?? 0 + 1,
+          replay: (this.request.custom?.replay ?? 0) + 1,
         })
 
         const context = await doRequest(this.request)
@@ -326,7 +335,6 @@ export class Requete {
 
     // exec middleware
     try {
-      this.logger.info(`Use ${this.middlewares.length} middleware`)
       this.logger.request(context)
       await compose(this.middlewares)(context, this.invoke.bind(this))
 

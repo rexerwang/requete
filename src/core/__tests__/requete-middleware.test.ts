@@ -86,6 +86,17 @@ describe('Requete middleware specs', () => {
     )
   })
 
+  it('should set params correctly in middleware', async () => {
+    const requete = new Requete()
+    requete.use(async (ctx, next) => {
+      ctx.params({ a: 1, b: 2 })
+      await next()
+    })
+
+    const res = await requete.post('/do-mock', { params: { b: 1 } })
+    expect(res.request.url).toBe('/do-mock?a=1&b=2')
+  })
+
   it('should set abortSignal correctly in middleware', async () => {
     const requete = new Requete()
     let controller: any

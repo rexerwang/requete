@@ -5,6 +5,7 @@ import {
   mergeHeaders,
   pick,
   RequestError,
+  stringifyUrl,
 } from 'requete/shared'
 
 import { TimeoutAbortController } from './AbortController'
@@ -24,6 +25,18 @@ export type RequestBody =
   | null
   | Record<string, any>
   | Record<string, any>[]
+
+export type RequestQueryRecord = Record<
+  string,
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | Array<string | number | boolean>
+>
+
+export type RequestQuery = string | URLSearchParams | RequestQueryRecord
 
 export interface RequestConfig {
   baseURL?: string
@@ -67,18 +80,7 @@ export interface IRequest extends Omit<RequestConfig, 'verbose'> {
    */
   method?: Method
   /** A string or object to set querystring of url */
-  params?:
-    | string
-    | URLSearchParams
-    | Record<
-        string,
-        | string
-        | number
-        | boolean
-        | null
-        | undefined
-        | Array<string | number | boolean>
-      >
+  params?: RequestQuery
   /** request`s body */
   data?: RequestBody
   /**
@@ -130,14 +132,22 @@ export interface IContext<Data = any> extends IResponse<Data> {
    * ```
    */
   set(headerOrName: HeadersInit | string, value?: string | null): this
-  /** throw {@link RequestError} */
-  throw(e: string | Error): void
+
+  /**
+   * Add extra params to `request.url`.
+   * If there are duplicate keys, then the original key-values will be removed.
+   */
+  params(params: RequestQuery): this
+
   /**
    * get `ctx.request.abort`,
    * and **create one if not exist**
    * @throws {RequestError}
    */
   abort(): TimeoutAbortController
+
+  /** throw {@link RequestError} */
+  throw(e: string | Error): void
 
   /**
    * Assign to current context
@@ -271,9 +281,9 @@ export class Requete {
 
         return this
       },
-      throw(e) {
-        if (e instanceof RequestError) throw e
-        throw new RequestError(e, this)
+      params(params) {
+        this.request.url = stringifyUrl(this.request.url, params, false)
+        return this
       },
       abort() {
         if (!this.request.abort) {
@@ -286,6 +296,10 @@ export class Requete {
         }
 
         return this.request.abort
+      },
+      throw(e) {
+        if (e instanceof RequestError) throw e
+        throw new RequestError(e, this)
       },
       assign(context) {
         Object.assign(this, context)

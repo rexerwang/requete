@@ -1,6 +1,6 @@
-import type { IRequest } from 'requete'
+import type { IRequest, RequestQuery } from 'requete'
 
-function stringifyUrl(url: string, query: NonNullable<IRequest['params']>) {
+export function stringifyUrl(url: string, query: RequestQuery, append = true) {
   let searchParams: URLSearchParams
 
   if (query instanceof URLSearchParams) {
@@ -18,7 +18,15 @@ function stringifyUrl(url: string, query: NonNullable<IRequest['params']>) {
     })
   }
 
-  return url + (url.indexOf('?') === -1 ? '?' : '&') + searchParams.toString()
+  const qIndex = url.indexOf('?')
+
+  if (qIndex === -1) return url + '?' + searchParams.toString()
+  if (append) return url + '&' + searchParams.toString()
+  else {
+    const params = new URLSearchParams(url.slice(qIndex))
+    searchParams.forEach((value, key) => params.set(key, value.toString()))
+    return url.slice(0, qIndex) + '?' + params.toString()
+  }
 }
 
 function isAbsolute(url: string) {

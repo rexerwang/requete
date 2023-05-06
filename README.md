@@ -81,7 +81,7 @@ requete
   })
 ```
 
-For commonjs module, `require` it:
+For Nodejs, using commonjs (.cjs):
 
 ```js
 const requete = require('requete')
@@ -97,10 +97,28 @@ http.post('/post', { id: 1 })
 
 For browser:
 
+- UMD
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/requete"></script>
 
 <script>
+  // use default instance
+  requete.get('https://httpbin.org/get')
+
+  // create new instance
+  const http = requete.create()
+</script>
+```
+
+- ESM
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/requete"></script>
+
+<script type="module">
+  import { create } from 'https://cdn.jsdelivr.net/npm/requete/index.browser.mjs'
+
   // use default instance
   requete.get('https://httpbin.org/get')
 
@@ -315,23 +333,30 @@ interface IContext<Data = any> extends IResponse<Data> {
    * @throws {RequestError}
    */
   set(headerOrName: HeadersInit | string, value?: string | null): this
+
   /**
-   * throw RequestError
+   * Add extra params to `request.url`.
+   * If there are duplicate keys, then the original key-values will be removed.
    */
-  throw(e: string | Error): void
+  params(params: RequestQuery): this
+
   /**
    * get `ctx.request.abort`,
-   * and **create one if not exists**
+   * and **create one if not exist**
    * @throws {RequestError}
    */
   abort(): TimeoutAbortController
+
+  /** throw {@link RequestError} */
+  throw(e: string | Error): void
+
   /**
    * Assign to current context
    */
   assign(context: Partial<IContext>): void
 
   /**
-   * Replay current request.
+   * Replay current request
    * And assign new context to current, with replay`s response
    */
   replay(): Promise<void>
@@ -341,29 +366,63 @@ interface IContext<Data = any> extends IResponse<Data> {
 In middleware, the first argument is `ctx` of type `IContext`. You can call methods such as `ctx.set`, `ctx.throw`, `ctx.abort` before sending the request (i.e., before the `await next()` statement).
 Otherwise, if these methods are called in other cases, a `RequestError` will be thrown.
 
-`ctx.replay` is used to replay the request in middleware or other case.  
+### ctx.set(key, value)
+
+set one header of request.
+_And header names are matched by case-insensitive byte sequence._
+
+### ctx.set(object)
+
+set multi headers of request.
+
+### ctx.params(params)
+
+Add extra `params` to `request.url`.  
+**If there are duplicate keys, then the original key-values will be removed.**
+
+### ctx.abort()
+
+Return the current `config.abort`, and **create one if not exist**
+
+### ctx.throw(error)
+
+It is used to throw a [`RequestError`](#requesterror)
+
+### ctx.assign(context)
+
+It is used to assign new context object to current. (`Object.assign`)
+
+### ctx.replay()
+
+It is used to replay the request in middleware or other case.  
 After respond, will assign new context to current, with replay\`s response,
 And will add counts of replay in `ctx.request.custom.replay`.
 
 Examples:
 
 ```ts
-const auth = {
-  token: '<token>',
-  authenticate: requete.post('/authenticate').then((r) => {
-    auth.token = r.data.token
-  }),
+const Auth = {
+  get token() {
+    return localStorage.getItem('token')
+  },
+  set token(value) {
+    return localStorage.setItem('token', value)
+  },
+  authenticate: () =>
+    requete.post('/authenticate').then((r) => {
+      Auth.token = r.data.token
+    }),
 }
 
 requete.use(async (ctx, next) => {
-  ctx.set('Authorization', auth.token)
+  ctx.set('Authorization', `Bearer ${Auth.token}`)
 
   await next()
 
   // when unauthorized, re-authenticate
   // Maybe causes dead loop if always respond 401
   if (ctx.status === 401) {
-    await auth.authenticate()
+    await Auth.authenticate()
     // replay request after re-authenticated.
     await ctx.replay()
   }

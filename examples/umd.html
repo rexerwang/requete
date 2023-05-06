@@ -1,59 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>requete umd example</title>
+    <title>ESM Import</title>
     <link rel="stylesheet" href="./styles/index.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/json.min.js"></script>
   </head>
 
   <body>
     <main>
-      <div class="posts">
-        <h4>/posts</h4>
-        <pre><code class="language-json" data-manual>pending...</code></pre>
+      <div class="get">
+        <pre><code class="language-markdown http"># GET https://httpbin.org/get</code></pre>
+        <pre><code class="language-json res">pending</code></pre>
       </div>
-      <div class="comments">
-        <h4>/comments</h4>
-        <pre><code class="language-json" data-manual>pending...</code></pre>
-      </div>
-      <div class="profile">
-        <h4>/profile</h4>
-        <pre><code class="language-json" data-manual>pending...</code></pre>
+      <div class="post">
+        <pre><code class="language-markdown http"># POST https://httpbin.org/post</code></pre>
+        <pre><code class="language-json res">pending</code></pre>
       </div>
     </main>
+    <!-- Import from dist -->
     <script src="./scripts/index.js"></script>
     <script src="/requete/index.umd.js"></script>
+
+    <!-- Import from CDN: jsdelivr.com  -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/requete/polyfill.umd.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/requete"></script> -->
+
+    <!-- Import from CDN: unpkg.com -->
+    <!-- <script src="https://unpkg.com/requete/polyfill.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/requete"></script> -->
     <script>
-      const http = requete.create({ verbose: true })
-
-      http
-        .get('/posts')
-        .catch((e) => e)
-        .then((r) => {
-          document.querySelector('.posts code').innerHTML = printRes(r)
-        })
-
-      http
-        .get('/comments')
-        .catch((e) => e)
-        .then((r) => {
-          document.querySelector('.comments code').innerHTML = printRes(r)
-        })
-
-      http
-        .get('/profiles')
-        .catch((e) => e)
-        .then((r) => {
-          document.querySelector('.profile code').innerHTML = printRes(r)
-        })
+      renderRequest('.get')(requete.get('https://httpbin.org/get'))
+      renderRequest('.post')(requete.post('https://httpbin.org/post'))
     </script>
   </body>
 </html>

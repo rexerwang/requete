@@ -1,64 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>requete middleware example</title>
+    <title>requete middleware</title>
     <link rel="stylesheet" href="./styles/index.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
   </head>
 
   <body>
-    <main>
-      <div class="posts">
-        <h4>/posts</h4>
-        <pre><code class="language-json" data-manual>pending...</code></pre>
-      </div>
-      <div class="comments">
-        <h4>/comments</h4>
-        <pre><code class="language-json" data-manual>pending...</code></pre>
-      </div>
-      <div class="profile">
-        <h4>/profile</h4>
-        <pre><code class="language-json" data-manual>pending...</code></pre>
-      </div>
-    </main>
+    <main></main>
     <script src="./scripts/index.js"></script>
-    <script src="/requete/index.umd.js"></script>
-    <script>
-      const http = requete.create({ verbose: true }).use(async (ctx, next) => {
-        http.logger.info(ctx.request.url, 'add header "X-Request-Id"')
+    <script type="module">
+      import requete, { create } from '/requete/index.browser.mjs'
 
-        ctx.set('X-Request-Id', 'Requete')
-        await next()
-      })
+      const Auth = {
+        get token() {
+          return sessionStorage.getItem('token')
+        },
+        set token(value) {
+          return sessionStorage.setItem('token', value)
+        },
+        authenticate: () =>
+          requete
+            .get('https://httpbin.org/uuid')
+            .then((r) => {
+              Auth.token = `Bearer ${r.data.uuid}`
+            })
+            .catch(() => {
+              Auth.token = ''
+            }),
+      }
 
-      http
-        .get('/posts')
-        .catch((e) => e)
-        .then((r) => {
-          document.querySelector('.posts code').innerHTML = printRes(r)
+      const http = create()
+        .use(async (ctx, next) => {
+          // set request header
+          ctx.set('X-Request-Id', 'requete')
+
+          // enable cors
+          ctx.request.mode = 'cors'
+
+          // add extra params to url
+          if (ctx.request.method === 'GET') {
+            ctx.params({ t: Date.now() })
+          }
+
+          await next()
+        })
+        .use(async (ctx, next) => {
+          ctx.set('Authorization', Auth.token)
+
+          await next()
+
+          // when unauthorized, re-authenticate
+          // Maybe causes dead loop if always respond 401
+          if (ctx.status === 401) {
+            await Auth.authenticate()
+            // replay request after re-authenticated.
+            await ctx.replay()
+          }
         })
 
-      http
-        .get('/comments')
-        .catch((e) => e)
-        .then((r) => {
-          document.querySelector('.comments code').innerHTML = printRes(r)
-        })
+      const createRequest = createRequestFactory(http)
 
-      http
-        .get('/profiles')
-        .catch((e) => e)
-        .then((r) => {
-          document.querySelector('.profile code').innerHTML = printRes(r)
-        })
+      createRequest('get https://httpbin.org/bearer')()
     </script>
   </body>
 </html>

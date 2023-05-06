@@ -1,43 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>requete responseType example</title>
+    <title>Blob Response</title>
     <link rel="stylesheet" href="./styles/index.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/json.min.js"></script>
   </head>
 
   <body>
     <main>
       <div class="blob">
-        <h4>blob</h4>
-        <img src="" alt="blob image" />
-        <pre><code class="language-json" data-manual>pending...</code></pre>
+        <pre><code class="language-markdown http"># GET https://placehold.co/400x100</code></pre>
+        <img alt="response" title="response" />
+        <pre><code class="language-json res">pending</code></pre>
       </div>
     </main>
     <script src="./scripts/index.js"></script>
-    <script src="/requete/index.umd.js"></script>
-    <script>
-      requete
-        .get('https://placehold.co/400x100', {
+    <script type="module">
+      import requete from '/requete/index.browser.mjs'
+
+      renderRequest('.blob')(
+        requete.get('https://placehold.co/400x100', {
           params: { text: 'blob responseType' },
           responseType: 'blob',
           mode: 'cors',
         })
-        .then((r) => {
+      ).then((r) => {
+        if (r.data) {
           document
             .querySelector('.blob img')
             .setAttribute('src', URL.createObjectURL(r.data))
-
-          document.querySelector('.blob code').innerHTML = printRes(r)
-        })
+        }
+      })
     </script>
   </body>
 </html>

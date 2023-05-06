@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.5](https://github.com/rexerwang/requete/compare/v1.1.4...v1.1.5) (2023-05-06)
+
+### Features
+
+- **build:** add file `index.browser.mjs` for browser env ([40b4426](https://github.com/rexerwang/requete/commit/40b442692843d0706eb30f0f4e8e37c74bf7f00e))
+- **core:** add `ctx.params` for set search-params ([ea6db2a](https://github.com/rexerwang/requete/commit/ea6db2aadd6d70108b8999e85e4171df045a6f57))
+- **core:** add toStringTag for Object.toString ([70e0af0](https://github.com/rexerwang/requete/commit/70e0af0329765129b99efff4ade7d1f7e7124442))
+
 ## [1.1.4](https://github.com/rexerwang/requete/compare/v1.1.3...v1.1.4) (2023-05-04)
 
 ### Bug Fixes

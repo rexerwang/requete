@@ -17,4 +17,8 @@ export class RequestError extends Error {
 
     this.ctx = ctx
   }
+
+  get [Symbol.toStringTag]() {
+    return 'RequestError'
+  }
 }

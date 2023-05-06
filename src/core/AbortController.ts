@@ -34,4 +34,8 @@ export class TimeoutAbortController {
       this.timeoutId = null
     }
   }
+
+  get [Symbol.toStringTag]() {
+    return 'TimeoutAbortController'
+  }
 }

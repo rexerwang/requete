@@ -4,9 +4,9 @@ import {
 } from 'abortcontroller-polyfill/src/abortcontroller'
 import { Headers as HeadersPolyfill } from 'headers-polyfill'
 
-~(function (self) {
+~(function (global) {
   const polyfill = (propertyKey, propertyValue) => {
-    Object.defineProperty(self, propertyKey, {
+    Object.defineProperty(global, propertyKey, {
       writable: true,
       enumerable: false,
       configurable: true,
@@ -14,12 +14,12 @@ import { Headers as HeadersPolyfill } from 'headers-polyfill'
     })
   }
 
-  if (!self.Headers) {
+  if (!global.Headers) {
     polyfill('Headers', HeadersPolyfill)
   }
 
-  if (!self.AbortController) {
+  if (!global.AbortController) {
     polyfill('AbortController', AbortControllerPolyfill)
     polyfill('AbortSignal', AbortSignalPolyfill)
   }
-})(typeof self !== 'undefined' ? self : global)
+})(typeof globalThis !== 'undefined' ? globalThis : global || self)

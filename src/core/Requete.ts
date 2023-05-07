@@ -197,10 +197,6 @@ export class Requete {
     )
   }
 
-  get [Symbol.toStringTag]() {
-    return 'Requete'
-  }
-
   /**
    * add middleware function
    *

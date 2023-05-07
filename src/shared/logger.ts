@@ -11,7 +11,7 @@ export class Logger {
     const headers = (headers?: Headers) => {
       if (headers) {
         const obj: any = {}
-        headers?.forEach((value, key) => {
+        headers.forEach((value, key) => {
           obj[key] = value
         })
         return obj

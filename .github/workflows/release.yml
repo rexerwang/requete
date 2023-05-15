@@ -15,7 +15,7 @@ on:
           - patch
           - minor
           - major
-        default: auto
+        default: patch
       dry:
         type: boolean
         description: dry-run

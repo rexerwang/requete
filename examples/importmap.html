@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESM Import</title>
+    <link rel="stylesheet" href="./styles/index.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/javascript.min.js"></script>
+  </head>
+
+  <body>
+    <main></main>
+    <script src="./scripts/index.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "requete": "https://cdn.jsdelivr.net/npm/requete/index.mjs",
+          "requete/adapter": "https://cdn.jsdelivr.net/npm/requete/adapter.mjs",
+          "requete/shared": "https://cdn.jsdelivr.net/npm/requete/shared.mjs"
+        }
+      }
+    </script>
+    <script type="module">
+      import { create } from 'requete'
+
+      const requete = create({ baseURL: 'https://httpbin.org' })
+
+      const createRequest = createRequestFactory(requete)
+
+      createRequest('get /get')()
+      createRequest('post /post')()
+    </script>
+  </body>
+</html>

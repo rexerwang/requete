@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-pnpm tsc --noEmit
+pnpm lint:tsc
 pnpm lint-staged
 pnpm vitest run --changed --passWithNoTests

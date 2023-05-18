@@ -81,7 +81,7 @@ requete
   })
 ```
 
-For Nodejs, using commonjs (.cjs):
+**For Nodejs (commonjs):**
 
 ```js
 const requete = require('requete')
@@ -95,7 +95,7 @@ const http = requete.create({ baseURL: 'https://httpbin.org' })
 http.post('/post', { id: 1 })
 ```
 
-For browser:
+**For browsers:**
 
 - UMD
 
@@ -111,19 +111,34 @@ For browser:
 </script>
 ```
 
-- ESM
+- ESM: by `index.browser.mjs`
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/requete"></script>
-
 <script type="module">
-  import { create } from 'https://cdn.jsdelivr.net/npm/requete/index.browser.mjs'
+  import requete from 'https://cdn.jsdelivr.net/npm/requete/index.browser.mjs'
 
-  // use default instance
   requete.get('https://httpbin.org/get')
+</script>
+```
 
-  // create new instance
-  const http = requete.create()
+- ESM: by `importmap`
+
+```html
+<script type="importmap">
+  {
+    "imports": {
+      "requete": "https://cdn.jsdelivr.net/npm/requete/index.mjs",
+      "requete/adapter": "https://cdn.jsdelivr.net/npm/requete/adapter.mjs",
+      "requete/shared": "https://cdn.jsdelivr.net/npm/requete/shared.mjs"
+    }
+  }
+</script>
+<script type="module">
+  import { create } from 'requete'
+
+  const requete = create({ baseURL: 'https://httpbin.org' })
+
+  requete.get('/get')
 </script>
 ```
 

@@ -39,7 +39,16 @@ const withMinify = (config) => {
   ]
 }
 
-const setupModuleConfig = (file, external = /^requete/, exports = null) => {
+const setupModuleConfig = (file, option) => {
+  const { target, external, exports } = Object.assign(
+    {
+      target: 'module',
+      external: /^requete/,
+      exports: null,
+    },
+    option
+  )
+
   const module = pkg.exports[file === 'index' ? '.' : `./${file}`]
   const input = `src/${file}.ts`
 
@@ -56,42 +65,37 @@ const setupModuleConfig = (file, external = /^requete/, exports = null) => {
     plugins: commonPlugins,
   }
 
-  // define commonjs
-  const cjs = {
-    input,
-    external,
-    output: {
-      file: dist(module.require),
-      format: 'cjs',
-      esModule: false,
-      exports: 'named',
-      outro: exports
-        ? [
-            `module.exports = ${exports.default};`,
-            ...Object.entries(exports)
-              .filter(([key]) => key !== 'default')
-              .map(([key, value]) => `module.exports.${key} = ${value};`),
-            'exports.default = module.exports;',
-          ].join('\n')
-        : '',
-      generatedCode: { constBindings: true },
-      banner,
-    },
-    plugins: commonPlugins.concat(useBabel()),
-  }
+  switch (target) {
+    case 'module':
+      return [
+        mjs,
+        // define commonjs
+        {
+          input,
+          external,
+          output: {
+            file: dist(module.require),
+            format: 'cjs',
+            esModule: false,
+            exports: 'named',
+            outro: exports
+              ? [
+                  `module.exports = ${exports.default};`,
+                  ...Object.entries(exports)
+                    .filter(([key]) => key !== 'default')
+                    .map(([key, value]) => `module.exports.${key} = ${value};`),
+                  'exports.default = module.exports;',
+                ].join('\n')
+              : '',
+            generatedCode: { constBindings: true },
+            banner,
+          },
+          plugins: commonPlugins.concat(useBabel()),
+        },
+      ]
 
-  const configs = [mjs, cjs]
-
-  if (file === 'index') {
-    configs.push(
-      // define browser esm
-      ...withMinify({
-        ...mjs,
-        external: null,
-        output: { ...mjs.output, file: dotWith('browser')(mjs.output.file) },
-      }),
-      // define declaration
-      {
+    case 'declaration':
+      return {
         input,
         external,
         output: {
@@ -115,10 +119,14 @@ const setupModuleConfig = (file, external = /^requete/, exports = null) => {
           ]),
         ],
       }
-    )
-  }
 
-  return configs
+    case 'browser':
+      mjs.output.file = dotWith('browser')(mjs.output.file)
+      return mjs
+
+    default:
+      throw new Error('invalid target')
+  }
 }
 
 const setupUMDConfig = (config) => {
@@ -129,30 +137,38 @@ const setupUMDConfig = (config) => {
   return withMinify(config)
 }
 
-export default [].concat(
-  setupModuleConfig('index', /^requete/, {
-    default: 'index',
-    create: 'create',
-    Requete: 'Requete',
-    TimeoutAbortController: 'TimeoutAbortController',
-    FetchAdapter: 'adapter.FetchAdapter',
-    XhrAdapter: 'adapter.XhrAdapter',
-    RequestError: 'shared.RequestError',
+const configs = {
+  index: setupModuleConfig('index', {
+    exports: {
+      default: 'index',
+      create: 'create',
+      Requete: 'Requete',
+      TimeoutAbortController: 'TimeoutAbortController',
+      FetchAdapter: 'adapter.FetchAdapter',
+      XhrAdapter: 'adapter.XhrAdapter',
+      RequestError: 'shared.RequestError',
+    },
   }),
-  setupModuleConfig('middleware'),
-  setupModuleConfig('adapter'),
-  setupModuleConfig('shared'),
-  setupUMDConfig({
+  declaration: setupModuleConfig('index', { target: 'declaration' }),
+  'index:browser': setupModuleConfig('index', {
+    target: 'browser',
+    external: null,
+  }),
+  middleware: setupModuleConfig('middleware'),
+  shared: setupModuleConfig('shared'),
+  global: setupUMDConfig({
     input: 'src/global.mjs',
     output: {
       name: pkg.name,
       file: dist(pkg.browser),
     },
   }),
-  setupUMDConfig({
+  polyfill: setupUMDConfig({
     input: 'src/polyfill.mjs',
     output: {
       file: dist(pkg.exports['./polyfill']),
     },
-  })
-)
+  }),
+}
+
+export default () => configs[process.env.build]

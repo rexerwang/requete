@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.7](https://github.com/rexerwang/requete/compare/v1.1.6...v1.1.7) (2023-06-18)
+
+### Bug Fixes
+
+- **build:** missing requete/adapter ([e77b947](https://github.com/rexerwang/requete/commit/e77b9472c373cc0a99c5838a2b10584693426b88))
+- **RequestError:** set toStringTag `Error` ([a0a6642](https://github.com/rexerwang/requete/commit/a0a66420553d8f7600f7c8e23141fb7c5a1a80ac))
+
 ## [1.1.6](https://github.com/rexerwang/requete/compare/v1.1.5...v1.1.6) (2023-05-15)
 
 ### Bug Fixes

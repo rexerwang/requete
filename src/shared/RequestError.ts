@@ -19,6 +19,6 @@ export class RequestError extends Error {
   }
 
   get [Symbol.toStringTag]() {
-    return 'RequestError'
+    return 'Error'
   }
 }

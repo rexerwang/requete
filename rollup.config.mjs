@@ -155,6 +155,7 @@ const configs = {
     external: null,
   }),
   middleware: setupModuleConfig('middleware'),
+  adapter: setupModuleConfig('adapter'),
   shared: setupModuleConfig('shared'),
   global: setupUMDConfig({
     input: 'src/global.mjs',

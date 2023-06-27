@@ -1,1 +1,1 @@
-export * from './middleware/logger'
+export * from './middleware/timestamp'

@@ -269,7 +269,7 @@ interface RequestConfig {
 }
 ```
 
-`config.verbose` is used to toggle the logger output (instead of logger middleware).
+`config.verbose` is used to toggle the logger output.
 
 - set `true` or `2`: output `info` and `error` level
 - set `1`: output `error` level

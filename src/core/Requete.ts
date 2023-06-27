@@ -112,7 +112,7 @@ export interface IContext<Data = any> extends IResponse<Data> {
    * request config.
    * and empty `Headers` object as default
    */
-  request: IRequest & { headers: Headers }
+  request: IRequest & { method: Method; headers: Headers }
   /**
    * set `ctx.request.headers`
    *
@@ -319,6 +319,8 @@ export class Requete {
   }
 
   private async invoke(ctx: IContext) {
+    this.logger.request(ctx)
+
     const adapter = ctx.request.adapter ?? this.adapter
     const response = await adapter.request(ctx)
 
@@ -349,7 +351,6 @@ export class Requete {
 
     // exec middleware
     try {
-      this.logger.request(context)
       await compose(this.middlewares)(context, this.invoke.bind(this))
 
       if (!context.ok) {

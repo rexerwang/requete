@@ -21,8 +21,8 @@ equal(typeof create, 'function', 'requete.create')
 equal(typeof FetchAdapter, 'function', 'requete.FetchAdapter')
 equal(typeof XhrAdapter, 'function', 'requete.XhrAdapter')
 
-import { logger } from 'requete/middleware'
-equal(typeof logger, 'function', 'requete/middleware:logger')
+import { timestamp } from 'requete/middleware'
+equal(typeof timestamp, 'function', 'requete/middleware:timestamp')
 
 import { Adapter, createAdapter } from 'requete/adapter'
 equal(typeof Adapter, 'function', 'requete/adapter:Adapter')

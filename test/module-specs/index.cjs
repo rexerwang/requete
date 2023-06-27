@@ -13,8 +13,8 @@ assert.equal(typeof requete.create, 'function', 'requete.create')
 assert.equal(typeof requete.FetchAdapter, 'function', 'requete.FetchAdapter')
 assert.equal(typeof requete.XhrAdapter, 'function', 'requete.XhrAdapter')
 
-const { logger } = require('requete/middleware')
-assert.equal(typeof logger, 'function', 'requete/middleware:logger')
+const { timestamp } = require('requete/middleware')
+assert.equal(typeof timestamp, 'function', 'requete/middleware:timestamp')
 
 const {
   Adapter,

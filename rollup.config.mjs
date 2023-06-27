@@ -5,9 +5,15 @@ import resolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
 
-import { copy, generatePackageJson, getBanner } from './build/index.mjs'
-import pkg from './package.json' assert { type: 'json' }
+import {
+  copy,
+  generatePackageJson,
+  getBanner,
+  prevent,
+  readJson,
+} from './build/index.mjs'
 
+const pkg = readJson('./package.json')
 const banner = getBanner(pkg)
 const commonPlugins = [
   typescript({ exclude: 'src/**/*.{test,spec}.ts' }),
@@ -115,8 +121,8 @@ const setupModuleConfig = (file, option) => {
           copy([
             { src: 'LICENSE', dest: dist() },
             { src: 'README.md', dest: dist() },
-            { src: '.npmignore', dest: dist() },
           ]),
+          prevent(['index.js']),
         ],
       }
 

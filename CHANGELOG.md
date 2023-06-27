@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.8](https://github.com/rexerwang/requete/compare/v1.1.7...v1.1.8) (2023-06-27)
+
+### Bug Fixes
+
+- **Requete:** logging request after invoke middlewares ([b205c64](https://github.com/rexerwang/requete/commit/b205c64180be25ac576c0a96c1a608fe40072822))
+
+### Features
+
+- **middleware:** add timestamp & remove logger ([b474641](https://github.com/rexerwang/requete/commit/b474641ce8b64f0a3c7f64791e933578ed8881e8))
+
 ## [1.1.7](https://github.com/rexerwang/requete/compare/v1.1.6...v1.1.7) (2023-06-18)
 
 ### Bug Fixes

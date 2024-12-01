@@ -86,7 +86,7 @@
     "@vitest/coverage-c8": "^0.31.0",
     "@vitest/ui": "^0.34.3",
     "abortcontroller-polyfill": "^1.7.5",
-    "concurrently": "^8.0.1",
+    "concurrently": "^9.1.0",
     "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",

@@ -49,7 +49,7 @@ importers:
         version: 0.34.3(vitest@0.31.0)
       abortcontroller-polyfill:
         specifier: ^1.7.5
-        version: 1.7.5
+        version: 1.7.6
       concurrently:
         specifier: ^9.1.0
         version: 9.1.0
@@ -1242,8 +1242,8 @@ packages:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
     hasBin: true
 
-  abortcontroller-polyfill@1.7.5:
-    resolution: {integrity: sha512-JMJ5soJWP18htbbxJjG7bG6yuI6pRhgJ0scHHTfkUjf6wjP912xZWvM+A4sJK3gqd9E8fcPbDnOefbA9Th/FIQ==}
+  abortcontroller-polyfill@1.7.6:
+    resolution: {integrity: sha512-Zypm+LjYdWAzvuypZvDN0smUJrhOurcuBWhhMRBExqVLRvdjp3Z9mASxKyq19K+meZMshwjjy5S0lkm388zE4Q==}
 
   accepts@1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
@@ -5490,7 +5490,7 @@ snapshots:
       jsonparse: 1.3.1
       through: 2.3.8
 
-  abortcontroller-polyfill@1.7.5: {}
+  abortcontroller-polyfill@1.7.6: {}
 
   accepts@1.3.8:
     dependencies:
